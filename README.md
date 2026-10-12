@@ -4,11 +4,11 @@ A tactile, classified dossier-inspired portfolio showcasing full-stack Java, And
 
 ## Tech Stack
 - **Languages**: Java, SQL, Python, JavaScript, HTML5/CSS3
-- **Frameworks & Systems**: Servlets, JSP, JDBC, Android SDK, React, Vite, Tailwind CSS
-- **Databases & Tools**: MySQL, PostgreSQL, SQLite, Firebase, Git, REST APIs
+- **Frameworks & Systems**: Servlets, JSP, JDBC, Android SDK, React, Hibernate, Tailwind CSS
+- **Databases & Tools**: MySQL, SQL, Firebase, Git, REST APIs
 
 ## Projects
-- **Orbit**: Full-Stack Student Mentorship Platform (Java Servlets, JSP, JDBC, SQL)
-- **Roots**: Agricultural Marketplace & Supply-Chain Android App (Android SDK, Java, Firebase)
-- **Mudra**: Expense & Personal Finance Tracker (Android SDK, Java, SQLite)
-- **Gaming Hub**: Interactive Web Gaming Portal (JavaScript, HTML5/CSS3)
+- **Orbit**: Full-Stack Interest-Based Social Networking Platform for Discovering Like-Minded People and Building Connections (Java Servlets, JSP, JDBC, SQL)
+- **Roots**: Family Social Media Android App for Sharing Photos and Staying Connected with Family Members (Android SDK, Java, Firebase)
+- **Mudra**: Indian Sign Language (ISL) Recognition and Translation System with Real-Time Gesture Detection and Voice Output (Python, TensorFlow, OpenCV, MediaPipe)
+- **Gaming Hub**: Web-Based Game Links Aggregator for Discovering and Accessing Online Games (JavaScript, HTML5, CSS3)
