@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #f3f2ed;
+    color: #1c1b18;
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 15px;
+    line-height: 1.65;
+    margin: 0;
+    min-height: 100vh;
+  }
+
+  a {
+    color: #1c1b18;
+    transition: color 0.15s ease;
+  }
+
+  a:hover {
+    color: #b45a12;
+  }
+
+  button {
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  button:focus-visible,
+  a:focus-visible {
+    outline: 3px solid #d4701a;
+    outline-offset: 2px;
+  }
+}
+
+@keyframes blink {
+  0%, 45% {
+    opacity: 1;
+  }
+  50%, 95% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.cursor {
+  display: inline-block;
+  width: 0.12em;
+  height: 0.82em;
+  background-color: #d4701a;
+  vertical-align: -0.04em;
+  margin-left: 0.06em;
+  border-radius: 1px;
+  animation: blink 0.88s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor {
+    animation: none;
+  }
+}
+
+/* Filmstrip / Barcode bottom pattern */
+.filmstrip-pattern {
+  height: 12px;
+  background: repeating-linear-gradient(90deg, #1c1b18 0 18px, #f3f2ed 18px 26px);
+  border: 2px solid #1c1b18;
+  border-top: 0;
+}
+
+/* Subtle archival paper texture grain */
+.paper-noise {
+  background-image: radial-gradient(rgba(28, 27, 24, 0.04) 1px, transparent 0);
+  background-size: 16px 16px;
+}
+
+/* Print styling for direct CV export */
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-page {
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+}
