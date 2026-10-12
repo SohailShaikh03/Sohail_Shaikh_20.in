@@ -51,7 +51,7 @@ export default function RecordSection({ education, commendations }) {
 
                 {/* Expanded Details */}
                 {isOpen && (
-                  <div className="p-5 sm:p-6 grid grid-cols-[minmax(80px,110px)_minmax(0,1fr)] gap-y-3 gap-x-4 text-[14px] border-t-2 border-[#1c1b18] bg-white leading-relaxed animate-fadeIn">
+                  <div className="p-4 sm:p-6 grid grid-cols-[80px_1fr] sm:grid-cols-[110px_1fr] gap-y-2.5 sm:gap-y-3 gap-x-3 sm:gap-x-4 text-[13px] sm:text-[14px] border-t-2 border-[#1c1b18] bg-white leading-relaxed animate-fadeIn">
                     <div className="text-[#66625a] uppercase tracking-[0.1em] text-[11px] pt-0.5">
                       SCHOOL
                     </div>

@@ -34,11 +34,11 @@ export default function TopBar({
   };
 
   return (
-    <header className="flex flex-wrap items-center justify-between gap-y-3 py-5 border-b-2 border-[#1c1b18] text-[13px] tracking-[0.18em] uppercase text-[#66625a] font-mono">
+    <header className="flex flex-wrap items-center justify-between gap-y-2 py-3.5 sm:py-5 border-b-2 border-[#1c1b18] text-[12px] sm:text-[13px] tracking-[0.14em] sm:tracking-[0.18em] uppercase text-[#66625a] font-mono">
       {/* Bureau ID & Time */}
-      <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-        <span className="font-semibold text-[#1c1b18]">
-          DEV BUREAU / PERSONNEL ARCHIVE
+      <div className="flex flex-wrap items-center gap-3 sm:gap-6">
+        <span className="font-semibold text-[#1c1b18] text-[11.5px] sm:text-[13px]">
+          DEV BUREAU <span className="hidden xs:inline">/</span> <span className="hidden xs:inline">PERSONNEL ARCHIVE</span>
         </span>
         <span className="hidden md:inline-block text-[#a39d8e]">|</span>
         <span className="hidden md:inline-flex items-center gap-2 text-[#4a473f]">
@@ -48,12 +48,12 @@ export default function TopBar({
       </div>
 
       {/* Status & Controls */}
-      <div className="flex items-center gap-3 sm:gap-5">
+      <div className="flex items-center gap-2 sm:gap-5">
         {/* Open to Work Badge */}
-        <div className="flex items-center gap-2 text-[#1c1b18] font-medium text-[12px]">
-          <span className="relative flex h-2.5 w-2.5">
+        <div className="flex items-center gap-1.5 sm:gap-2 text-[#1c1b18] font-medium text-[11px] sm:text-[12px]">
+          <span className="relative flex h-2 sm:h-2.5 w-2 sm:w-2.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#3f7a4e] opacity-75" />
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#3f7a4e]" />
+            <span className="relative inline-flex rounded-full h-2 sm:h-2.5 w-2 sm:w-2.5 bg-[#3f7a4e]" />
           </span>
           <span className="hidden sm:inline">OPEN TO WORK</span>
         </div>

@@ -68,38 +68,38 @@ export default function HeroDossier({ data, onOpenProjects, onOpenReviews }) {
   };
 
   return (
-    <section className="flex flex-wrap gap-12 items-stretch pt-2">
+    <section className="flex flex-wrap gap-8 sm:gap-12 items-stretch pt-2">
       {/* Left Column: Headline, Bio & Primary CTAs */}
-      <div className="flex-1 basis-[520px] min-w-0 flex flex-col justify-center gap-6">
-        <div className="text-[13px] tracking-[0.22em] uppercase text-[#66625a] font-mono">
+      <div className="flex-1 basis-[320px] sm:basis-[520px] min-w-0 flex flex-col justify-center gap-4 sm:gap-6">
+        <div className="text-[12px] sm:text-[13px] tracking-[0.16em] sm:tracking-[0.22em] uppercase text-[#66625a] font-mono">
           {data.tagline}
         </div>
 
         <h1
           onClick={handleRetype}
           title="Click to re-type name"
-          className="m-0 font-display font-black text-[clamp(84px,14.5vw,184px)] leading-[0.86] tracking-[0.01em] text-[#1c1b18] select-none inline-flex items-baseline min-h-[0.88em] cursor-pointer"
+          className="m-0 font-display font-black text-[clamp(52px,13.5vw,184px)] leading-[0.88] tracking-[0.01em] text-[#1c1b18] select-none inline-flex items-baseline min-h-[0.88em] cursor-pointer"
         >
           <span>{typedName}</span>
           <span className="cursor" aria-hidden="true" />
         </h1>
 
-        <div className="font-display font-bold text-[clamp(26px,3.4vw,42px)] tracking-[0.12em] uppercase text-[#b45a12] leading-tight">
+        <div className="font-display font-bold text-[clamp(20px,3.2vw,42px)] tracking-[0.1em] sm:tracking-[0.12em] uppercase text-[#b45a12] leading-tight">
           {data.role}
         </div>
 
-        <p className="m-0 max-w-[58ch] text-[17px] leading-[1.65] text-[#1c1b18]">
+        <p className="m-0 max-w-[58ch] text-[15.5px] sm:text-[17px] leading-[1.65] text-[#1c1b18]">
           {data.bio}
         </p>
 
         {/* Action Buttons */}
-        <div className="flex flex-wrap items-center gap-4 pt-2 no-print">
+        <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-2 no-print">
           <button
             onClick={() => {
               sound.playClick();
               onOpenProjects();
             }}
-            className="px-6 py-3.5 min-h-[44px] bg-[#1c1b18] text-[#f3f2ed] border-2 border-[#1c1b18] hover:bg-[#d4701a] hover:border-[#d4701a] font-mono font-semibold tracking-[0.14em] text-[13px] uppercase shadow-sm active:translate-y-0.5"
+            className="flex-1 xs:flex-initial px-5 sm:px-6 py-3 sm:py-3.5 min-h-[44px] bg-[#1c1b18] text-[#f3f2ed] border-2 border-[#1c1b18] hover:bg-[#d4701a] hover:border-[#d4701a] font-mono font-semibold tracking-[0.12em] sm:tracking-[0.14em] text-[12px] sm:text-[13px] uppercase shadow-sm active:translate-y-0.5 text-center justify-center inline-flex items-center"
           >
             Open Project Files
           </button>
@@ -110,7 +110,7 @@ export default function HeroDossier({ data, onOpenProjects, onOpenReviews }) {
                 sound.playClick();
                 onOpenReviews();
               }}
-              className="px-5 py-3.5 min-h-[44px] border-2 border-[#1c1b18] hover:border-[#d4701a] text-[#1c1b18] hover:text-[#d4701a] hover:bg-[#eae8e0] font-mono font-semibold tracking-[0.14em] text-[13px] uppercase transition-colors active:translate-y-0.5 flex items-center gap-2"
+              className="px-4 sm:px-5 py-3 sm:py-3.5 min-h-[44px] border-2 border-[#1c1b18] hover:border-[#d4701a] text-[#1c1b18] hover:text-[#d4701a] hover:bg-[#eae8e0] font-mono font-semibold tracking-[0.12em] sm:tracking-[0.14em] text-[12px] sm:text-[13px] uppercase transition-colors active:translate-y-0.5 flex items-center justify-center gap-1.5"
               title="View community reviews & notes"
             >
               <span className="text-[#d4701a]">★</span>
@@ -123,7 +123,7 @@ export default function HeroDossier({ data, onOpenProjects, onOpenReviews }) {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => sound.playClick()}
-            className="inline-flex items-center gap-2 px-6 py-3.5 min-h-[44px] border-2 border-[#1c1b18] text-[#1c1b18] hover:bg-[#1c1b18] hover:text-[#f3f2ed] font-mono font-semibold tracking-[0.14em] text-[13px] uppercase no-underline transition-colors active:translate-y-0.5"
+            className="inline-flex items-center justify-center gap-1.5 px-4 sm:px-6 py-3 sm:py-3.5 min-h-[44px] border-2 border-[#1c1b18] text-[#1c1b18] hover:bg-[#1c1b18] hover:text-[#f3f2ed] font-mono font-semibold tracking-[0.12em] sm:tracking-[0.14em] text-[12px] sm:text-[13px] uppercase no-underline transition-colors active:translate-y-0.5"
           >
             <span>GitHub</span>
             <span aria-hidden="true">↗</span>
@@ -131,17 +131,17 @@ export default function HeroDossier({ data, onOpenProjects, onOpenReviews }) {
 
           <button
             onClick={handleCopySummary}
-            className="px-4 py-3.5 min-h-[44px] border-2 border-dashed border-[#cfcabb] hover:border-[#b45a12] text-[#66625a] hover:text-[#b45a12] font-mono font-medium tracking-[0.1em] text-[12px] uppercase transition-colors"
+            className="px-3.5 sm:px-4 py-3 sm:py-3.5 min-h-[44px] border-2 border-dashed border-[#cfcabb] hover:border-[#b45a12] text-[#66625a] hover:text-[#b45a12] font-mono font-medium tracking-[0.08em] sm:tracking-[0.1em] text-[11px] sm:text-[12px] uppercase transition-colors"
             title="Copy plain-text summary to clipboard"
           >
-            {copied ? "✓ Copied to clipboard" : "Copy Dossier Data"}
+            {copied ? "✓ Copied" : "Copy Dossier"}
           </button>
         </div>
       </div>
 
       {/* Right Column: Dark CRT Dossier Card */}
-      <div className="flex-1 basis-[380px] min-w-0 flex flex-col justify-start">
-        <div className="bg-[#1c1b18] text-[#f3f2ed] p-7 sm:p-8 flex flex-col gap-5 rounded-t-sm shadow-md">
+      <div className="flex-1 basis-[320px] sm:basis-[380px] min-w-0 flex flex-col justify-start">
+        <div className="bg-[#1c1b18] text-[#f3f2ed] p-5 sm:p-8 flex flex-col gap-4 sm:gap-5 rounded-t-sm shadow-md">
           {/* Card Header & Radar Gauge */}
           <div className="flex justify-between items-center gap-4">
             <div>
@@ -203,7 +203,7 @@ export default function HeroDossier({ data, onOpenProjects, onOpenReviews }) {
           <div className="h-[1px] bg-[#4a473f]" />
 
           {/* Metadata Grid */}
-          <div className="grid grid-cols-[minmax(84px,104px)_minmax(0,1fr)] gap-y-3.5 gap-x-4 text-[13.5px] font-mono leading-relaxed">
+          <div className="grid grid-cols-[80px_1fr] sm:grid-cols-[104px_1fr] gap-y-2.5 sm:gap-y-3.5 gap-x-3 sm:gap-x-4 text-[12.5px] sm:text-[13.5px] font-mono leading-relaxed">
             <div className="text-[#a39d8e] uppercase tracking-[0.12em] text-[11px] pt-0.5">
               NAME
             </div>

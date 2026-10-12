@@ -8,15 +8,15 @@ export default function Footer({ fileCode, location, onOpenReviews }) {
   };
 
   return (
-    <footer className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t-2 border-[#1c1b18] text-[12px] tracking-[0.18em] uppercase text-[#66625a] font-mono">
-      <div className="flex items-center gap-3">
+    <footer className="flex flex-col sm:flex-row items-center justify-between gap-4 py-6 border-t-2 border-[#1c1b18] text-[11.5px] sm:text-[12px] tracking-[0.14em] sm:tracking-[0.18em] uppercase text-[#66625a] font-mono text-center sm:text-left">
+      <div className="flex items-center gap-2.5 sm:gap-3">
         <span className="w-1.5 h-1.5 bg-[#d4701a] inline-block" />
         <span>
           FILE {fileCode} / {location || "PUNE, IN"}
         </span>
       </div>
 
-      <div className="flex items-center gap-6">
+      <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
         {onOpenReviews && (
           <button
             onClick={onOpenReviews}

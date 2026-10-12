@@ -51,7 +51,7 @@ export default function ArchiveNav({ activeTab, onSelectTab }) {
       </div>
 
       <nav
-        className="flex flex-wrap gap-0 border-b-2 border-[#1c1b18]"
+        className="flex overflow-x-auto no-scrollbar gap-1 sm:gap-0 border-b-2 border-[#1c1b18] pb-1 sm:pb-0"
         aria-label="Archive sections"
       >
         {tabs.map((tab) => {
@@ -66,14 +66,14 @@ export default function ArchiveNav({ activeTab, onSelectTab }) {
               title={tab.hint}
               aria-selected={isActive}
               role="tab"
-              className={`px-5 sm:px-7 py-3.5 min-h-[46px] box-border text-[14px] font-mono font-semibold tracking-[0.14em] uppercase -mb-[2px] transition-all flex items-center ${
+              className={`px-3.5 sm:px-7 py-2.5 sm:py-3.5 min-h-[42px] sm:min-h-[46px] box-border text-[12.5px] sm:text-[14px] font-mono font-semibold tracking-[0.1em] sm:tracking-[0.14em] uppercase -mb-[2px] transition-all flex items-center flex-none whitespace-nowrap rounded-t-sm sm:rounded-none ${
                 isActive
                   ? "bg-[#1c1b18] text-[#f3f2ed] border-2 border-[#1c1b18] shadow-sm z-10"
-                  : "bg-transparent text-[#1c1b18] border-2 border-transparent hover:bg-[#eae8e0] hover:text-[#b45a12]"
+                  : "bg-[#eae8e0]/40 sm:bg-transparent text-[#1c1b18] border-2 border-transparent hover:bg-[#eae8e0] hover:text-[#b45a12]"
               }`}
             >
               <span
-                className={`mr-2.5 text-[12px] font-bold ${
+                className={`mr-2 sm:mr-2.5 text-[11px] sm:text-[12px] font-bold ${
                   isActive ? "text-[#f0a04b]" : "opacity-60"
                 }`}
               >

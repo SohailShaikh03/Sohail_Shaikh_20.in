@@ -182,7 +182,7 @@ export default function ReviewsSection() {
             sound.playClick();
             setIsModalOpen(true);
           }}
-          className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#1c1b18] text-[#f3f2ed] border-2 border-[#1c1b18] hover:bg-[#d4701a] hover:border-[#d4701a] font-mono font-bold tracking-[0.14em] text-[13px] uppercase shadow-[4px_4px_0px_0px_rgba(212,112,26,0.4)] active:translate-y-0.5 transition-all flex-none"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#1c1b18] text-[#f3f2ed] border-2 border-[#1c1b18] hover:bg-[#d4701a] hover:border-[#d4701a] font-mono font-bold tracking-[0.14em] text-[13px] uppercase shadow-[4px_4px_0px_0px_rgba(212,112,26,0.4)] active:translate-y-0.5 transition-all flex-none"
         >
           <Plus className="w-4 h-4 text-[#f0a04b]" />
           <span>Write a Review</span>
@@ -308,8 +308,8 @@ export default function ReviewsSection() {
 
       {/* ================= SIMPLE WRITE A REVIEW MODAL ================= */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fadeIn">
-          <div className="relative w-full max-w-lg bg-[#fbfaf6] border-2 border-[#1c1b18] shadow-2xl p-6 sm:p-8 flex flex-col gap-5">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-sm animate-fadeIn">
+          <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-[#fbfaf6] border-2 border-[#1c1b18] shadow-2xl p-5 sm:p-8 flex flex-col gap-4 sm:gap-5 rounded-sm">
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b-2 border-[#1c1b18] pb-3">
               <div>
@@ -402,7 +402,7 @@ export default function ReviewsSection() {
                 <label className="block text-[11px] uppercase tracking-wider font-bold text-[#1c1b18] mb-1.5">
                   Card Theme:
                 </label>
-                <div className="flex flex-wrap gap-2">
+                <div className="grid grid-cols-2 xs:grid-cols-3 sm:flex sm:flex-wrap gap-1.5 sm:gap-2">
                   {COLOR_THEMES.map((thm) => (
                     <button
                       key={thm.id}

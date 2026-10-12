@@ -9,6 +9,19 @@ export default function SkillsSection({ groups }) {
   const selectedGroup =
     groups.find((g) => g.id === selectedGroupId) || groups[0];
 
+  const handleSelectGroup = (id) => {
+    sound.playClick();
+    setSelectedGroupId(id);
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      setTimeout(() => {
+        const panel = document.getElementById("skills-inspector");
+        if (panel) {
+          panel.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 60);
+    }
+  };
+
   return (
     <section className="flex flex-wrap gap-8 items-stretch font-mono animate-fadeIn">
       {/* Left Column: Skill Category Selector */}
@@ -22,10 +35,7 @@ export default function SkillsSection({ groups }) {
           return (
             <button
               key={g.id}
-              onClick={() => {
-                sound.playClick();
-                setSelectedGroupId(g.id);
-              }}
+              onClick={() => handleSelectGroup(g.id)}
               className={`text-left p-4 sm:p-5 w-full block min-h-[44px] transition-all border-2 border-[#1c1b18] ${
                 isSelected
                   ? "bg-[#1c1b18] text-[#f3f2ed] shadow-md -translate-x-1 sm:-translate-x-1.5"
@@ -33,13 +43,13 @@ export default function SkillsSection({ groups }) {
               }`}
             >
               <div
-                className={`text-[12px] tracking-[0.18em] uppercase ${
+                className={`text-[11.5px] sm:text-[12px] tracking-[0.16em] sm:tracking-[0.18em] uppercase ${
                   isSelected ? "text-[#f0a04b]" : "opacity-70"
                 }`}
               >
                 {g.items.length} Modules Documented
               </div>
-              <div className="font-display font-black text-[34px] leading-[1.05] uppercase mt-1 tracking-wide">
+              <div className="font-display font-black text-[24px] sm:text-[34px] leading-[1.05] uppercase mt-1 tracking-wide">
                 {g.label}
               </div>
             </button>
@@ -48,7 +58,10 @@ export default function SkillsSection({ groups }) {
       </div>
 
       {/* Right Column: Equipment List Panel */}
-      <div className="flex-[2] basis-[460px] min-w-0 bg-[#fbfaf6] border-2 border-[#1c1b18] p-6 sm:p-10 flex flex-col gap-3 shadow-md rounded-sm">
+      <div
+        id="skills-inspector"
+        className="flex-[2] basis-[460px] min-w-0 bg-[#fbfaf6] border-2 border-[#1c1b18] p-4 sm:p-8 md:p-10 flex flex-col gap-3 shadow-md rounded-sm scroll-mt-6"
+      >
         {/* Header */}
         <div className="flex items-center justify-between border-b-2 border-[#1c1b18] pb-3 mb-2">
           <div className="text-[13px] tracking-[0.2em] uppercase font-bold text-[#b45a12]">

@@ -8,6 +8,19 @@ export default function ProjectsSection({ projects }) {
   const selectedProject =
     projects.find((p) => p.id === selectedId) || projects[0];
 
+  const handleSelectProject = (id) => {
+    sound.playClick();
+    setSelectedId(id);
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      setTimeout(() => {
+        const inspector = document.getElementById("project-inspector");
+        if (inspector) {
+          inspector.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 60);
+    }
+  };
+
   return (
     <section className="flex flex-wrap gap-8 items-stretch font-mono animate-fadeIn">
       {/* Left Column: File Catalog Cards */}
@@ -22,23 +35,20 @@ export default function ProjectsSection({ projects }) {
           return (
             <div
               key={proj.id}
-              onClick={() => {
-                sound.playClick();
-                setSelectedId(proj.id);
-              }}
-              className={`text-left p-5 w-full block min-h-[44px] transition-all border-2 border-[#1c1b18] cursor-pointer ${
+              onClick={() => handleSelectProject(proj.id)}
+              className={`text-left p-4 sm:p-5 w-full block min-h-[44px] transition-all border-2 border-[#1c1b18] cursor-pointer ${
                 isSelected
                   ? "bg-[#1c1b18] text-[#f3f2ed] shadow-md -translate-x-1 sm:-translate-x-1.5"
                   : "bg-[#fbfaf6] text-[#1c1b18] hover:bg-[#eae8e0] hover:border-[#1c1b18]"
               }`}
             >
               {/* File header */}
-              <div className="flex justify-between items-center gap-2 text-[12px] tracking-[0.18em] uppercase">
+              <div className="flex justify-between items-center gap-2 text-[11.5px] sm:text-[12px] tracking-[0.16em] sm:tracking-[0.18em] uppercase">
                 <span className={isSelected ? "text-[#f0a04b]" : "opacity-70 font-semibold"}>
                   File {proj.code}
                 </span>
                 <span
-                  className={`text-[11px] px-2 py-0.5 border ${
+                  className={`text-[10.5px] sm:text-[11px] px-2 py-0.5 border ${
                     isSelected ? "border-[#f0a04b]/40 text-[#f0a04b]" : "border-current opacity-70"
                   }`}
                 >
@@ -47,7 +57,7 @@ export default function ProjectsSection({ projects }) {
               </div>
 
               {/* Title */}
-              <div className="font-display font-black text-[38px] leading-[1.05] uppercase mt-2 tracking-wide">
+              <div className="font-display font-black text-[26px] sm:text-[38px] leading-[1.05] uppercase mt-1.5 sm:mt-2 tracking-wide">
                 {proj.title}
               </div>
 
@@ -112,19 +122,22 @@ export default function ProjectsSection({ projects }) {
       </div>
 
       {/* Right Column: Full File Inspector (Dark Dossier Screen) */}
-      <div className="flex-[2] basis-[460px] min-w-0 bg-[#1c1b18] text-[#f3f2ed] p-6 sm:p-10 flex flex-col gap-6 border-2 border-[#1c1b18] shadow-lg rounded-sm">
+      <div
+        id="project-inspector"
+        className="flex-[2] basis-[460px] min-w-0 bg-[#1c1b18] text-[#f3f2ed] p-5 sm:p-8 md:p-10 flex flex-col gap-5 sm:gap-6 border-2 border-[#1c1b18] shadow-lg rounded-sm scroll-mt-6"
+      >
         {/* Top File Meta */}
-        <div className="flex flex-wrap justify-between items-center gap-2 text-[12px] tracking-[0.2em] uppercase text-[#f0a04b] font-medium border-b border-[#33312b] pb-3">
+        <div className="flex flex-wrap justify-between items-center gap-2 text-[11.5px] sm:text-[12px] tracking-[0.16em] sm:tracking-[0.2em] uppercase text-[#f0a04b] font-medium border-b border-[#33312b] pb-3">
           <span>READING FILE {selectedProject.code}</span>
           <span className="text-[#a39d8e]">CLASSIFICATION: {selectedProject.kind}</span>
         </div>
 
         {/* Project Headline & Title */}
         <div>
-          <h2 className="m-0 font-display font-black text-[clamp(48px,7vw,86px)] leading-[0.95] uppercase tracking-wide text-white">
+          <h2 className="m-0 font-display font-black text-[clamp(34px,7vw,86px)] leading-[0.95] uppercase tracking-wide text-white">
             {selectedProject.title}
           </h2>
-          <div className="text-[13.5px] tracking-[0.16em] uppercase text-[#d4701a] font-semibold mt-1">
+          <div className="text-[12.5px] sm:text-[13.5px] tracking-[0.14em] sm:tracking-[0.16em] uppercase text-[#d4701a] font-semibold mt-1">
             {selectedProject.type}
           </div>
         </div>

@@ -34,19 +34,19 @@ export default function ContactSection({ data }) {
   };
 
   return (
-    <section className="bg-[#1c1b18] text-[#f3f2ed] p-7 sm:p-12 md:p-14 flex flex-wrap gap-8 md:gap-12 items-center justify-between font-mono rounded-sm shadow-xl border-2 border-[#1c1b18] animate-fadeIn">
+    <section className="bg-[#1c1b18] text-[#f3f2ed] p-5 sm:p-10 md:p-14 flex flex-wrap gap-8 md:gap-12 items-center justify-between font-mono rounded-sm shadow-xl border-2 border-[#1c1b18] animate-fadeIn">
       {/* Left Column: Heading & Availability Pitch */}
-      <div className="flex-1 basis-[420px] min-w-0 flex flex-col gap-4">
-        <div className="text-[13px] tracking-[0.22em] uppercase font-semibold text-[#f0a04b] flex items-center gap-2">
+      <div className="flex-1 basis-[320px] sm:basis-[420px] min-w-0 flex flex-col gap-3.5 sm:gap-4">
+        <div className="text-[12px] sm:text-[13px] tracking-[0.18em] sm:tracking-[0.22em] uppercase font-semibold text-[#f0a04b] flex items-center gap-2">
           <span className="w-2 h-2 bg-[#f0a04b] rounded-full inline-block" />
           Requests for Contact // Placement Direct
         </div>
 
-        <h2 className="m-0 font-display font-black text-[clamp(44px,6.2vw,78px)] leading-[0.95] uppercase tracking-wide text-white">
+        <h2 className="m-0 font-display font-black text-[clamp(32px,6.2vw,78px)] leading-[0.95] uppercase tracking-wide text-white">
           Hiring for a First-Year Developer?
         </h2>
 
-        <p className="m-0 max-w-[54ch] text-[16px] leading-[1.7] text-[#e6e2d6]">
+        <p className="m-0 max-w-[54ch] text-[15px] sm:text-[16px] leading-[1.65] text-[#e6e2d6]">
           I'm looking for entry-level Software Developer, Full-Stack Developer, and Android Developer
           roles, remote or in Pune, and internships. Java-based engineering teams are my
           first choice.
