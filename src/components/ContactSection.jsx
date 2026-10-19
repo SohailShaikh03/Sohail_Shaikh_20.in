@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { sound } from "../utils/sound";
+import { GithubIcon, LinkedinIcon, InstagramIcon, WhatsappIcon } from "./BrandIcons";
 
 export default function ContactSection({ data }) {
   const [copiedEmail, setCopiedEmail] = useState(false);
@@ -34,7 +35,7 @@ export default function ContactSection({ data }) {
   };
 
   return (
-    <section className="bg-[#1c1b18] text-[#f3f2ed] p-5 sm:p-10 md:p-14 flex flex-wrap gap-8 md:gap-12 items-center justify-between font-mono rounded-sm shadow-xl border-2 border-[#1c1b18] animate-fadeIn">
+    <section className="bg-[#1c1b18] dark:bg-[#191815] text-[#f3f2ed] p-5 sm:p-10 md:p-14 flex flex-wrap gap-8 md:gap-12 items-center justify-between font-mono rounded-sm shadow-xl border-2 border-[#1c1b18] dark:border-[#38352e] animate-fadeIn">
       {/* Left Column: Heading & Availability Pitch */}
       <div className="flex-1 basis-[320px] sm:basis-[420px] min-w-0 flex flex-col gap-3.5 sm:gap-4">
         <div className="text-[12px] sm:text-[13px] tracking-[0.18em] sm:tracking-[0.22em] uppercase font-semibold text-[#f0a04b] flex items-center gap-2">
@@ -92,20 +93,50 @@ export default function ContactSection({ data }) {
 
       {/* Right Column: Contact Connectors */}
       <div className="flex-initial basis-[380px] w-full min-w-0 flex flex-col gap-3.5 text-[14px]">
+        {/* Social Quick Grid: WhatsApp & Instagram */}
+        <div className="grid grid-cols-2 gap-3">
+          <a
+            href={data.whatsappUrl || "https://wa.me/919552081902"}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => sound.playClick()}
+            className="flex items-center justify-center gap-2 p-3 bg-[#25D366]/15 hover:bg-[#25D366] text-[#25D366] hover:text-[#1c1b18] border border-[#25D366] font-bold tracking-[0.1em] text-[12px] uppercase transition-all rounded-sm no-underline active:translate-y-0.5"
+            title="Chat on WhatsApp"
+          >
+            <WhatsappIcon className="w-4 h-4 fill-current flex-none" />
+            <span>WhatsApp</span>
+          </a>
+
+          <a
+            href={data.instagramUrl || "https://www.instagram.com/zohell._"}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => sound.playClick()}
+            className="flex items-center justify-center gap-2 p-3 bg-[#E4405F]/15 hover:bg-[#E4405F] text-[#E4405F] hover:text-white border border-[#E4405F] font-bold tracking-[0.1em] text-[12px] uppercase transition-all rounded-sm no-underline active:translate-y-0.5"
+            title="Follow @zohell._ on Instagram"
+          >
+            <InstagramIcon className="w-4 h-4 flex-none" />
+            <span>@zohell._</span>
+          </a>
+        </div>
+
         {/* GitHub Link */}
         <a
           href={data.githubUrl}
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => sound.playClick()}
-          className="flex items-center justify-between p-4 bg-[#f3f2ed] text-[#1c1b18] hover:bg-[#d4701a] hover:text-white font-bold tracking-[0.1em] text-[13px] uppercase transition-colors no-underline border-2 border-[#f3f2ed]"
+          className="flex items-center justify-between p-4 bg-[#f3f2ed] text-[#1c1b18] hover:bg-[#d4701a] hover:text-white font-bold tracking-[0.1em] text-[13px] uppercase transition-colors no-underline border-2 border-[#f3f2ed] rounded-sm"
         >
-          <span>GITHUB.COM/SOHAILSHAIKH03</span>
+          <div className="flex items-center gap-2">
+            <GithubIcon className="w-4 h-4" />
+            <span>GITHUB.COM/SOHAILSHAIKH03</span>
+          </div>
           <span aria-hidden="true">↗</span>
         </a>
 
         {/* Email Address Box with 1-Click Copy */}
-        <div className="flex flex-col gap-1 border-2 border-dashed border-[#f0a04b] p-3.5 bg-[#24221d]/60 text-[#f0a04b]">
+        <div className="flex flex-col gap-1 border-2 border-dashed border-[#f0a04b] p-3.5 bg-[#24221d]/60 text-[#f0a04b] rounded-sm">
           <div className="flex justify-between items-center text-[10px] tracking-[0.18em] uppercase text-[#a39d8e]">
             <span>DIRECT INBOX:</span>
             <span>{copiedEmail ? "✓ COPIED" : "CLICK TO COPY"}</span>
@@ -129,7 +160,7 @@ export default function ContactSection({ data }) {
         </div>
 
         {/* LinkedIn & Phone Box */}
-        <div className="flex flex-col gap-2.5 border-2 border-dashed border-[#f0a04b] p-3.5 bg-[#24221d]/60 text-[#f0a04b]">
+        <div className="flex flex-col gap-2.5 border-2 border-dashed border-[#f0a04b] p-3.5 bg-[#24221d]/60 text-[#f0a04b] rounded-sm">
           <div className="flex justify-between items-center text-[10px] tracking-[0.18em] uppercase text-[#a39d8e]">
             <span>LINKEDIN &amp; PHONE:</span>
             <span>{copiedPhone ? "✓ COPIED" : "PUNE, MAHARASHTRA"}</span>
@@ -141,9 +172,10 @@ export default function ContactSection({ data }) {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => sound.playClick()}
-              className="text-[#f0a04b] hover:text-white font-bold text-[13.5px] no-underline inline-flex items-center gap-1.5 truncate"
+              className="text-[#f0a04b] hover:text-white font-bold text-[13.5px] no-underline inline-flex items-center gap-2 truncate"
               title="Open LinkedIn profile"
             >
+              <LinkedinIcon className="w-3.5 h-3.5" />
               <span>{data.linkedinUrl ? data.linkedinUrl.replace(/^https?:\/\/(www\.)?/, "") : "linkedin.com/in/sohail-shaikh-z"}</span>
               <span aria-hidden="true">↗</span>
             </a>

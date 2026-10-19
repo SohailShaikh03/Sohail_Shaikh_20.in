@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -29,7 +30,11 @@ export default {
       animation: {
         'blink': 'blink 1.1s steps(1) infinite',
         'spin-slow': 'spin 20s linear infinite',
+        'spin-fast': 'spin 3s linear infinite',
         'radar-sweep': 'radarSweep 4s linear infinite',
+        'stamp': 'stampDrop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+        'float': 'floatAnim 3s ease-in-out infinite',
+        'wiggle': 'wiggle 1s ease-in-out infinite',
       },
       keyframes: {
         blink: {
@@ -39,6 +44,19 @@ export default {
         radarSweep: {
           '0%': { transform: 'rotate(0deg)' },
           '100%': { transform: 'rotate(360deg)' },
+        },
+        stampDrop: {
+          '0%': { opacity: '0', transform: 'scale(3) rotate(-25deg)' },
+          '70%': { opacity: '1', transform: 'scale(0.9) rotate(-10deg)' },
+          '100%': { opacity: '1', transform: 'scale(1) rotate(-12deg)' },
+        },
+        floatAnim: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-6px)' },
+        },
+        wiggle: {
+          '0%, 100%': { transform: 'rotate(-2deg)' },
+          '50%': { transform: 'rotate(2deg)' },
         }
       }
     },

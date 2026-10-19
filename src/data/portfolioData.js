@@ -14,6 +14,8 @@ export const portfolioData = {
     githubUrl: "https://github.com/SohailShaikh03",
     email: "sohailshaikh1620@gmail.com",
     linkedinUrl: "https://www.linkedin.com/in/sohail-shaikh-z",
+    instagramUrl: "https://www.instagram.com/zohell._",
+    whatsappUrl: "https://wa.me/919552081902",
     phone: "+91 9552081902",
     location: "Pune, Maharashtra, India",
     availability: "Immediate / 2026 Batch",

@@ -36,10 +36,10 @@ export default function ProjectsSection({ projects }) {
             <div
               key={proj.id}
               onClick={() => handleSelectProject(proj.id)}
-              className={`text-left p-4 sm:p-5 w-full block min-h-[44px] transition-all border-2 border-[#1c1b18] cursor-pointer ${
+              className={`text-left p-4 sm:p-5 w-full block min-h-[44px] transition-all border-2 cursor-pointer ${
                 isSelected
-                  ? "bg-[#1c1b18] text-[#f3f2ed] shadow-md -translate-x-1 sm:-translate-x-1.5"
-                  : "bg-[#fbfaf6] text-[#1c1b18] hover:bg-[#eae8e0] hover:border-[#1c1b18]"
+                  ? "bg-[#1c1b18] dark:bg-[#25231d] text-[#f3f2ed] border-[#1c1b18] dark:border-[#f0a04b] shadow-md -translate-x-1 sm:-translate-x-1.5"
+                  : "bg-[#fbfaf6] dark:bg-[#191815] text-[#1c1b18] dark:text-[#f3f2ed] border-[#1c1b18] dark:border-[#38352e] hover:bg-[#eae8e0] dark:hover:bg-[#22211c]"
               }`}
             >
               {/* File header */}
@@ -124,7 +124,7 @@ export default function ProjectsSection({ projects }) {
       {/* Right Column: Full File Inspector (Dark Dossier Screen) */}
       <div
         id="project-inspector"
-        className="flex-[2] basis-[460px] min-w-0 bg-[#1c1b18] text-[#f3f2ed] p-5 sm:p-8 md:p-10 flex flex-col gap-5 sm:gap-6 border-2 border-[#1c1b18] shadow-lg rounded-sm scroll-mt-6"
+        className="flex-[2] basis-[460px] min-w-0 bg-[#1c1b18] dark:bg-[#191815] text-[#f3f2ed] p-5 sm:p-8 md:p-10 flex flex-col gap-5 sm:gap-6 border-2 border-[#1c1b18] dark:border-[#38352e] shadow-lg rounded-sm scroll-mt-6"
       >
         {/* Top File Meta */}
         <div className="flex flex-wrap justify-between items-center gap-2 text-[11.5px] sm:text-[12px] tracking-[0.16em] sm:tracking-[0.2em] uppercase text-[#f0a04b] font-medium border-b border-[#33312b] pb-3">

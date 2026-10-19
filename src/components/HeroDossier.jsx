@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { sound } from "../utils/sound";
+import { FileText, Star, Sparkles } from "lucide-react";
+import { GithubIcon } from "./BrandIcons";
 
-export default function HeroDossier({ data, onOpenProjects, onOpenReviews }) {
+export default function HeroDossier({ data, onOpenProjects, onOpenReviews, onOpenResume }) {
   const [copied, setCopied] = useState(false);
+  const [isStamped, setIsStamped] = useState(false);
+  const [radarSpeed, setRadarSpeed] = useState("normal");
   const targetName = "SOHAIL";
   const [typedName, setTypedName] = useState("");
 
-  const typingIntervalRef = React.useRef(null);
+  const typingIntervalRef = useRef(null);
 
   const startTyping = (delay = 0) => {
     if (typingIntervalRef.current) {
@@ -67,81 +71,144 @@ export default function HeroDossier({ data, onOpenProjects, onOpenReviews }) {
     setTimeout(() => setCopied(false), 2200);
   };
 
+  const handleToggleStamp = () => {
+    sound.playStamp();
+    setIsStamped(!isStamped);
+  };
+
+  const handleRadarPing = () => {
+    sound.playTick();
+    setRadarSpeed("fast");
+    setTimeout(() => setRadarSpeed("normal"), 2500);
+  };
+
   return (
     <section className="flex flex-wrap gap-8 sm:gap-12 items-stretch pt-2">
       {/* Left Column: Headline, Bio & Primary CTAs */}
       <div className="flex-1 basis-[320px] sm:basis-[520px] min-w-0 flex flex-col justify-center gap-4 sm:gap-6">
-        <div className="text-[12px] sm:text-[13px] tracking-[0.16em] sm:tracking-[0.22em] uppercase text-[#66625a] font-mono">
-          {data.tagline}
+        <div className="flex items-center gap-2 text-[12px] sm:text-[13px] tracking-[0.16em] sm:tracking-[0.22em] uppercase text-[#66625a] dark:text-[#a09c91] font-mono">
+          <span className="w-2 h-2 rounded-full bg-[#d4701a]" />
+          <span>{data.tagline}</span>
         </div>
 
         <h1
           onClick={handleRetype}
           title="Click to re-type name"
-          className="m-0 font-display font-black text-[clamp(52px,13.5vw,184px)] leading-[0.88] tracking-[0.01em] text-[#1c1b18] select-none inline-flex items-baseline min-h-[0.88em] cursor-pointer"
+          className="m-0 font-display font-black text-[clamp(52px,13.5vw,184px)] leading-[0.88] tracking-[0.01em] text-[#1c1b18] dark:text-white select-none inline-flex items-baseline min-h-[0.88em] cursor-pointer hover:opacity-95 transition-opacity"
         >
           <span>{typedName}</span>
           <span className="cursor" aria-hidden="true" />
         </h1>
 
-        <div className="font-display font-bold text-[clamp(20px,3.2vw,42px)] tracking-[0.1em] sm:tracking-[0.12em] uppercase text-[#b45a12] leading-tight">
+        <div className="font-display font-bold text-[clamp(20px,3.2vw,42px)] tracking-[0.1em] sm:tracking-[0.12em] uppercase text-[#b45a12] dark:text-[#f0a04b] leading-tight">
           {data.role}
         </div>
 
-        <p className="m-0 max-w-[58ch] text-[15.5px] sm:text-[17px] leading-[1.65] text-[#1c1b18]">
+        <p className="m-0 max-w-[58ch] text-[15.5px] sm:text-[17px] leading-[1.65] text-[#1c1b18] dark:text-[#dedad0]">
           {data.bio}
         </p>
 
         {/* Action Buttons */}
-        <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-2 no-print">
+        <div className="flex flex-wrap items-center gap-2.5 sm:gap-3.5 pt-2 no-print">
+          {/* Projects Button */}
           <button
             onClick={() => {
               sound.playClick();
               onOpenProjects();
             }}
-            className="flex-1 xs:flex-initial px-5 sm:px-6 py-3 sm:py-3.5 min-h-[44px] bg-[#1c1b18] text-[#f3f2ed] border-2 border-[#1c1b18] hover:bg-[#d4701a] hover:border-[#d4701a] font-mono font-semibold tracking-[0.12em] sm:tracking-[0.14em] text-[12px] sm:text-[13px] uppercase shadow-sm active:translate-y-0.5 text-center justify-center inline-flex items-center"
+            className="px-5 sm:px-6 py-3 min-h-[44px] bg-[#1c1b18] text-[#f3f2ed] dark:bg-[#f3f2ed] dark:text-[#1c1b18] border-2 border-[#1c1b18] dark:border-[#f3f2ed] hover:bg-[#d4701a] dark:hover:bg-[#d4701a] dark:hover:text-white hover:border-[#d4701a] font-mono font-semibold tracking-[0.12em] sm:tracking-[0.14em] text-[12px] sm:text-[13px] uppercase shadow-sm active:translate-y-0.5 text-center justify-center inline-flex items-center transition-all"
           >
-            Open Project Files
+            Open Projects
           </button>
 
+          {/* Resume & Print Dossier Button */}
+          <button
+            onClick={() => {
+              sound.playClick();
+              if (onOpenResume) onOpenResume();
+            }}
+            title="Open official Resume & Print / Save PDF"
+            className="px-4 sm:px-5 py-3 min-h-[44px] border-2 border-[#d4701a] text-[#d4701a] dark:text-[#f0a04b] bg-[#d4701a]/5 hover:bg-[#d4701a] hover:text-white font-mono font-semibold tracking-[0.12em] sm:tracking-[0.14em] text-[12px] sm:text-[13px] uppercase transition-all active:translate-y-0.5 flex items-center justify-center gap-1.5"
+          >
+            <FileText className="w-3.5 h-3.5" />
+            <span>Resume / CV</span>
+          </button>
+
+          {/* Reviews Button */}
           {onOpenReviews && (
             <button
               onClick={() => {
                 sound.playClick();
                 onOpenReviews();
               }}
-              className="px-4 sm:px-5 py-3 sm:py-3.5 min-h-[44px] border-2 border-[#1c1b18] hover:border-[#d4701a] text-[#1c1b18] hover:text-[#d4701a] hover:bg-[#eae8e0] font-mono font-semibold tracking-[0.12em] sm:tracking-[0.14em] text-[12px] sm:text-[13px] uppercase transition-colors active:translate-y-0.5 flex items-center justify-center gap-1.5"
+              className="px-3.5 sm:px-4 py-3 min-h-[44px] border-2 border-[#1c1b18] dark:border-[#38352e] hover:border-[#d4701a] text-[#1c1b18] dark:text-[#f3f2ed] hover:text-[#d4701a] hover:bg-[#eae8e0] dark:hover:bg-[#25231e] font-mono font-semibold tracking-[0.12em] text-[12px] sm:text-[13px] uppercase transition-colors active:translate-y-0.5 flex items-center justify-center gap-1.5"
               title="View community reviews & notes"
             >
-              <span className="text-[#d4701a]">★</span>
+              <Star className="w-3.5 h-3.5 text-[#d4701a] fill-[#d4701a]" />
               <span>Reviews</span>
             </button>
           )}
 
+          {/* GitHub Button */}
           <a
             href={data.githubUrl}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => sound.playClick()}
-            className="inline-flex items-center justify-center gap-1.5 px-4 sm:px-6 py-3 sm:py-3.5 min-h-[44px] border-2 border-[#1c1b18] text-[#1c1b18] hover:bg-[#1c1b18] hover:text-[#f3f2ed] font-mono font-semibold tracking-[0.12em] sm:tracking-[0.14em] text-[12px] sm:text-[13px] uppercase no-underline transition-colors active:translate-y-0.5"
+            className="inline-flex items-center justify-center gap-1.5 px-3.5 sm:px-4 py-3 min-h-[44px] border-2 border-[#1c1b18] dark:border-[#38352e] text-[#1c1b18] dark:text-[#f3f2ed] hover:bg-[#1c1b18] hover:text-[#f3f2ed] dark:hover:bg-white dark:hover:text-[#1c1b18] font-mono font-semibold tracking-[0.12em] text-[12px] sm:text-[13px] uppercase no-underline transition-colors active:translate-y-0.5"
           >
-            <span>GitHub</span>
-            <span aria-hidden="true">↗</span>
+            <GithubIcon className="w-3.5 h-3.5" />
+            <span>GitHub ↗</span>
           </a>
 
+          {/* Interactive Stamp Button */}
+          <button
+            onClick={handleToggleStamp}
+            className={`px-3 py-3 min-h-[44px] border-2 border-dashed ${
+              isStamped
+                ? "border-[#d4701a] bg-[#d4701a]/15 text-[#d4701a] font-bold"
+                : "border-[#cfcabb] dark:border-[#4a473f] text-[#66625a] dark:text-[#a09c91] hover:border-[#d4701a] hover:text-[#d4701a]"
+            } font-mono text-[11px] sm:text-[12px] uppercase transition-all flex items-center gap-1 active:scale-95`}
+            title="Click to stamp candidate dossier"
+          >
+            <Sparkles className="w-3 h-3" />
+            <span>{isStamped ? "Stamped ✓" : "Stamp Dossier"}</span>
+          </button>
+
+          {/* Copy Summary */}
           <button
             onClick={handleCopySummary}
-            className="px-3.5 sm:px-4 py-3 sm:py-3.5 min-h-[44px] border-2 border-dashed border-[#cfcabb] hover:border-[#b45a12] text-[#66625a] hover:text-[#b45a12] font-mono font-medium tracking-[0.08em] sm:tracking-[0.1em] text-[11px] sm:text-[12px] uppercase transition-colors"
+            className="px-3 py-3 min-h-[44px] border border-dashed border-[#cfcabb] dark:border-[#4a473f] hover:border-[#b45a12] text-[#66625a] dark:text-[#a09c91] hover:text-[#b45a12] font-mono font-medium text-[11px] uppercase transition-colors"
             title="Copy plain-text summary to clipboard"
           >
-            {copied ? "✓ Copied" : "Copy Dossier"}
+            {copied ? "✓ Copied" : "Copy Info"}
           </button>
         </div>
       </div>
 
       {/* Right Column: Dark CRT Dossier Card */}
-      <div className="flex-1 basis-[320px] sm:basis-[380px] min-w-0 flex flex-col justify-start">
-        <div className="bg-[#1c1b18] text-[#f3f2ed] p-5 sm:p-8 flex flex-col gap-4 sm:gap-5 rounded-t-sm shadow-md">
+      <div className="flex-1 basis-[320px] sm:basis-[380px] min-w-0 flex flex-col justify-start relative">
+        <div className="relative bg-[#1c1b18] text-[#f3f2ed] p-5 sm:p-8 flex flex-col gap-4 sm:gap-5 rounded-t-sm shadow-md border-2 border-[#1c1b18] dark:border-[#38352e] overflow-hidden">
+          
+          {/* Interactive Distressed Rubber Stamp overlay */}
+          {isStamped && (
+            <div
+              onClick={handleToggleStamp}
+              title="Click to remove or restamp"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-auto cursor-pointer rubber-stamp animate-stamp bg-[#1c1b18]/90 text-center select-none shadow-2xl"
+            >
+              <div className="text-[10px] tracking-[0.25em] text-[#d4701a] dark:text-[#f0a04b] font-bold">
+                ★ DEV BUREAU SEAL ★
+              </div>
+              <div className="text-[17px] sm:text-[19px] font-black text-[#d4701a] dark:text-[#f0a04b] leading-tight">
+                RECOMMENDED HIRE
+              </div>
+              <div className="text-[9.5px] tracking-[0.16em] text-[#a39d8e]">
+                BATCH 2026 // CLEARED A+
+              </div>
+            </div>
+          )}
+
           {/* Card Header & Radar Gauge */}
           <div className="flex justify-between items-center gap-4">
             <div>
@@ -154,7 +221,11 @@ export default function HeroDossier({ data, onOpenProjects, onOpenReviews }) {
             </div>
 
             {/* Tactical Radar Widget */}
-            <div className="relative w-16 h-16 flex-none" title="Radar telemetry active">
+            <div
+              onClick={handleRadarPing}
+              className="relative w-16 h-16 flex-none cursor-pointer group"
+              title="Telemetry active — Click to ping radar"
+            >
               <svg
                 width="64"
                 height="64"
@@ -183,7 +254,7 @@ export default function HeroDossier({ data, onOpenProjects, onOpenReviews }) {
                 <circle cx="44" cy="20" r="2.5" fill="#3f7a4e" className="animate-ping" />
                 <circle cx="44" cy="20" r="2.5" fill="#3f7a4e" />
                 {/* Sweep Hand */}
-                <g className="origin-center animate-radar-sweep">
+                <g className={`origin-center ${radarSpeed === "fast" ? "animate-spin-fast" : "animate-radar-sweep"}`}>
                   <line
                     x1="32"
                     y1="32"
@@ -257,7 +328,7 @@ export default function HeroDossier({ data, onOpenProjects, onOpenReviews }) {
         </div>
 
         {/* Filmstrip Barcode Edge */}
-        <div className="filmstrip-pattern rounded-b-sm" aria-hidden="true" />
+        <div className="filmstrip-pattern rounded-b-sm border-t-0" aria-hidden="true" />
       </div>
     </section>
   );

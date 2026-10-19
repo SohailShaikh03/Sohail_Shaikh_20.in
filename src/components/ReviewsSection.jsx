@@ -8,9 +8,7 @@ import {
   CheckCircle2,
   X,
   Send,
-  Trash2,
-  User,
-  Sparkles
+  Trash2
 } from "lucide-react";
 
 // Clean, pleasant post-it note palettes
@@ -159,18 +157,18 @@ export default function ReviewsSection() {
       )}
 
       {/* Header Banner */}
-      <div className="bg-[#fbfaf6] border-2 border-[#1c1b18] p-6 sm:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-[4px_4px_0px_0px_#1c1b18]">
+      <div className="bg-[#fbfaf6] dark:bg-[#191815] border-2 border-[#1c1b18] dark:border-[#38352e] p-6 sm:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-[4px_4px_0px_0px_#1c1b18] dark:shadow-[4px_4px_0px_0px_#38352e]">
         <div className="flex flex-col gap-2 max-w-[720px]">
-          <div className="flex items-center gap-2 text-[12px] tracking-[0.22em] uppercase font-bold text-[#b45a12]">
+          <div className="flex items-center gap-2 text-[12px] tracking-[0.22em] uppercase font-bold text-[#b45a12] dark:text-[#f0a04b]">
             <span className="w-2 h-2 rounded-full bg-[#d4701a] animate-pulse" />
             <span>COMMUNITY FEEDBACK & REVIEWS</span>
           </div>
 
-          <h2 className="m-0 font-display font-black text-[clamp(40px,5.5vw,68px)] leading-[0.95] uppercase tracking-wide text-[#1c1b18]">
+          <h2 className="m-0 font-display font-black text-[clamp(40px,5.5vw,68px)] leading-[0.95] uppercase tracking-wide text-[#1c1b18] dark:text-white">
             Reviews & Testimonials
           </h2>
 
-          <p className="m-0 text-[15px] leading-relaxed text-[#66625a]">
+          <p className="m-0 text-[15px] leading-relaxed text-[#66625a] dark:text-[#a09c91]">
             Have we worked together, reviewed code, or collaborated on a project?
             Leave an honest review or message on my portfolio. All feedback submitted here appears live on this board.
           </p>
@@ -182,17 +180,17 @@ export default function ReviewsSection() {
             sound.playClick();
             setIsModalOpen(true);
           }}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#1c1b18] text-[#f3f2ed] border-2 border-[#1c1b18] hover:bg-[#d4701a] hover:border-[#d4701a] font-mono font-bold tracking-[0.14em] text-[13px] uppercase shadow-[4px_4px_0px_0px_rgba(212,112,26,0.4)] active:translate-y-0.5 transition-all flex-none"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#1c1b18] dark:bg-[#f3f2ed] text-[#f3f2ed] dark:text-[#1c1b18] border-2 border-[#1c1b18] dark:border-[#f3f2ed] hover:bg-[#d4701a] dark:hover:bg-[#d4701a] dark:hover:text-white hover:border-[#d4701a] font-mono font-bold tracking-[0.14em] text-[13px] uppercase shadow-[4px_4px_0px_0px_rgba(212,112,26,0.4)] active:translate-y-0.5 transition-all flex-none"
         >
-          <Plus className="w-4 h-4 text-[#f0a04b]" />
+          <Plus className="w-4 h-4 text-[#f0a04b] dark:text-[#b45a12]" />
           <span>Write a Review</span>
         </button>
       </div>
 
       {/* Reviews Summary Stats */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b-2 border-[#1c1b18] pb-3 text-[12px] text-[#66625a] uppercase tracking-wider">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b-2 border-[#1c1b18] dark:border-[#38352e] pb-3 text-[12px] text-[#66625a] dark:text-[#a09c91] uppercase tracking-wider">
         <div className="flex items-center gap-3">
-          <span className="font-bold text-[#1c1b18]">
+          <span className="font-bold text-[#1c1b18] dark:text-[#f3f2ed]">
             {reviews.length} {reviews.length === 1 ? "REVIEW" : "REVIEWS"} ON RECORD
           </span>
           {reviews.length > 0 && (
@@ -205,7 +203,7 @@ export default function ReviewsSection() {
             </span>
           )}
         </div>
-        <div className="text-[11px] text-[#a39d8e]">
+        <div className="text-[11px] text-[#a39d8e] dark:text-[#736e63]">
           [VISITOR FEEDBACK BOARD]
         </div>
       </div>
@@ -213,16 +211,16 @@ export default function ReviewsSection() {
       {/* Reviews Grid or Empty State */}
       {reviews.length === 0 ? (
         /* Empty State */
-        <div className="p-12 sm:p-16 border-2 border-dashed border-[#cfcabb] bg-[#fbfaf6] text-center flex flex-col items-center justify-center gap-4 my-2">
-          <div className="w-14 h-14 rounded-full bg-[#eae8e0] border-2 border-[#1c1b18] flex items-center justify-center text-[#d4701a]">
+        <div className="p-12 sm:p-16 border-2 border-dashed border-[#cfcabb] dark:border-[#38352e] bg-[#fbfaf6] dark:bg-[#191815] text-center flex flex-col items-center justify-center gap-4 my-2">
+          <div className="w-14 h-14 rounded-full bg-[#eae8e0] dark:bg-[#25231e] border-2 border-[#1c1b18] dark:border-[#38352e] flex items-center justify-center text-[#d4701a]">
             <MessageSquare className="w-6 h-6" />
           </div>
 
           <div className="max-w-[480px]">
-            <h3 className="m-0 font-display font-bold text-2xl uppercase tracking-wide text-[#1c1b18]">
+            <h3 className="m-0 font-display font-bold text-2xl uppercase tracking-wide text-[#1c1b18] dark:text-white">
               No Reviews Posted Yet
             </h3>
-            <p className="mt-2 text-[14.5px] text-[#66625a] leading-relaxed">
+            <p className="mt-2 text-[14.5px] text-[#66625a] dark:text-[#a09c91] leading-relaxed">
               Be the first colleague, teammate, or recruiter to leave a review or endorsement on my portfolio.
             </p>
           </div>
@@ -309,14 +307,14 @@ export default function ReviewsSection() {
       {/* ================= SIMPLE WRITE A REVIEW MODAL ================= */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-sm animate-fadeIn">
-          <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-[#fbfaf6] border-2 border-[#1c1b18] shadow-2xl p-5 sm:p-8 flex flex-col gap-4 sm:gap-5 rounded-sm">
+          <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-[#fbfaf6] dark:bg-[#1a1916] text-[#1c1b18] dark:text-[#f3f2ed] border-2 border-[#1c1b18] dark:border-[#38352e] shadow-2xl p-5 sm:p-8 flex flex-col gap-4 sm:gap-5 rounded-sm">
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b-2 border-[#1c1b18] pb-3">
+            <div className="flex items-center justify-between border-b-2 border-[#1c1b18] dark:border-[#38352e] pb-3">
               <div>
-                <div className="text-[11px] tracking-[0.2em] uppercase font-bold text-[#b45a12]">
+                <div className="text-[11px] tracking-[0.2em] uppercase font-bold text-[#b45a12] dark:text-[#f0a04b]">
                   PUBLIC TESTIMONIAL FORM
                 </div>
-                <h3 className="m-0 font-display font-black text-2xl uppercase tracking-wide text-[#1c1b18]">
+                <h3 className="m-0 font-display font-black text-2xl uppercase tracking-wide text-[#1c1b18] dark:text-white">
                   Write a Review
                 </h3>
               </div>
@@ -325,7 +323,7 @@ export default function ReviewsSection() {
                   sound.playClick();
                   setIsModalOpen(false);
                 }}
-                className="p-1.5 border border-[#1c1b18] hover:bg-[#1c1b18] hover:text-[#f3f2ed] transition-colors"
+                className="p-1.5 border border-[#1c1b18] dark:border-[#38352e] text-[#1c1b18] dark:text-[#f3f2ed] hover:bg-[#1c1b18] dark:hover:bg-white hover:text-[#f3f2ed] dark:hover:text-[#1c1b18] transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
