@@ -148,13 +148,23 @@ LANGUAGES
 
           {/* Action buttons */}
           <div className="flex items-center gap-2">
+            <a
+              href="./myresume.pdf"
+              download="Sohail_Shaikh_Resume.pdf"
+              title="Download official PDF resume file"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#d4701a] hover:bg-[#b45a12] text-white text-[11px] font-bold tracking-[0.1em] uppercase rounded-sm transition-colors shadow-sm no-underline"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>DOWNLOAD PDF</span>
+            </a>
+
             <button
               onClick={handlePrint}
               title="Print directly or save as PDF"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#d4701a] hover:bg-[#b45a12] text-white text-[11px] font-bold tracking-[0.1em] uppercase rounded-sm transition-colors shadow-sm"
+              className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 border border-[#4a473f] hover:border-white text-[#eae6dd] text-[11px] font-medium tracking-[0.08em] uppercase rounded-sm transition-colors"
             >
               <Printer className="w-3.5 h-3.5" />
-              <span>PRINT / PDF</span>
+              <span>PRINT</span>
             </button>
 
             <button
@@ -169,10 +179,10 @@ LANGUAGES
             <button
               onClick={handleDownloadTxt}
               title="Download text file (.txt)"
-              className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 border border-[#4a473f] hover:border-white text-[#eae6dd] text-[11px] font-medium tracking-[0.08em] uppercase rounded-sm transition-colors"
+              className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1.5 border border-[#4a473f] hover:border-white text-[#eae6dd] text-[11px] font-medium tracking-[0.08em] uppercase rounded-sm transition-colors"
             >
               <Download className="w-3.5 h-3.5" />
-              <span>DOWNLOAD .TXT</span>
+              <span>.TXT</span>
             </button>
 
             <button
@@ -203,7 +213,7 @@ LANGUAGES
             </div>
             
             <div className="text-[16px] sm:text-[18px] font-bold text-[#b45a12] dark:text-[#f0a04b] mt-1.5 uppercase tracking-wider">
-              Java Full-Stack &amp; Android Developer
+              Java &amp; Spring Boot Developer / QA Automation Engineer
             </div>
 
             {/* Quick Contact Line */}
@@ -272,7 +282,7 @@ LANGUAGES
               <span>Professional Summary</span>
             </div>
             <p className="text-[14px] sm:text-[14.5px] leading-relaxed text-[#1c1b18] dark:text-[#dedad0]">
-              Passionate, disciplined Java Full-Stack and Android Developer completing a BBA in Computer Applications at ATSS College, Pune (CGPA 8.56 / A+). Proficient in designing robust backend systems using Java Servlets, JSP, JDBC, and relational SQL, combined with native Android app engineering and computer vision accessibility applications. Committed to clean MVC architecture, defensive code, and scalable database schemas.
+              Dedicated, detail-oriented Java &amp; Spring Boot Developer and QA Automation Engineer completing a BBA in Computer Applications at ATSS College, Pune (CGPA 8.56 / A+). Proficient in building robust backend services using Java, Spring Boot, Hibernate, SQL, and RESTful APIs, combined with hands-on automated testing expertise using Selenium WebDriver, TestNG, Cucumber, and Unit Testing. Actively open to Software Developer, Java Developer, and QA / Software Tester roles.
             </p>
           </div>
 
@@ -284,20 +294,20 @@ LANGUAGES
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[13px]">
               <div className="p-3 bg-[#f3f2ed] dark:bg-[#22211e] border border-[#cfcabb] dark:border-[#38352e] rounded-sm">
-                <span className="font-bold text-[#1c1b18] dark:text-white block mb-1">Languages:</span>
-                <span className="text-[#4a473f] dark:text-[#c4bfb3]">Java (Core &amp; Advanced), SQL, Python, JavaScript (ES6+), HTML5, CSS3</span>
+                <span className="font-bold text-[#1c1b18] dark:text-white block mb-1">Backend &amp; Languages:</span>
+                <span className="text-[#4a473f] dark:text-[#c4bfb3]">Java (Core &amp; Advanced), Spring Boot, Hibernate &amp; JPA, SQL, Java Servlets, JSP, JDBC, Python</span>
               </div>
               <div className="p-3 bg-[#f3f2ed] dark:bg-[#22211e] border border-[#cfcabb] dark:border-[#38352e] rounded-sm">
-                <span className="font-bold text-[#1c1b18] dark:text-white block mb-1">Web &amp; Backend:</span>
-                <span className="text-[#4a473f] dark:text-[#c4bfb3]">Java Servlets, JSP, JDBC Connectivity, Apache Tomcat, RESTful APIs, React.js</span>
+                <span className="font-bold text-[#1c1b18] dark:text-white block mb-1">QA &amp; Automated Testing:</span>
+                <span className="text-[#4a473f] dark:text-[#c4bfb3]">Selenium WebDriver, TestNG, Cucumber (BDD), Postman (API Testing), Unit Testing (JUnit), STLC</span>
               </div>
               <div className="p-3 bg-[#f3f2ed] dark:bg-[#22211e] border border-[#cfcabb] dark:border-[#38352e] rounded-sm">
-                <span className="font-bold text-[#1c1b18] dark:text-white block mb-1">Mobile &amp; Cloud:</span>
-                <span className="text-[#4a473f] dark:text-[#c4bfb3]">Android SDK, Java, XML, Firebase (Auth, Realtime DB, Cloud Storage)</span>
+                <span className="font-bold text-[#1c1b18] dark:text-white block mb-1">Frontend &amp; UI Stack:</span>
+                <span className="text-[#4a473f] dark:text-[#c4bfb3]">HTML5, CSS3, JavaScript (ES6+), React.js, Bootstrap, Tailwind CSS</span>
               </div>
               <div className="p-3 bg-[#f3f2ed] dark:bg-[#22211e] border border-[#cfcabb] dark:border-[#38352e] rounded-sm">
                 <span className="font-bold text-[#1c1b18] dark:text-white block mb-1">Databases &amp; Tools:</span>
-                <span className="text-[#4a473f] dark:text-[#c4bfb3]">MySQL, PostgreSQL, SQLite, Git, GitHub, Android Studio, Eclipse, VS Code</span>
+                <span className="text-[#4a473f] dark:text-[#c4bfb3]">MySQL, PostgreSQL, Git, GitHub, Antigravity, Maven, Eclipse, VS Code, Android Studio</span>
               </div>
             </div>
           </div>
@@ -432,13 +442,21 @@ LANGUAGES
             </div>
           </div>
 
-          {/* Section: Certifications & Leadership */}
+          {/* Section: Certifications & Training */}
           <div>
             <div className="flex items-center gap-2 text-[12px] tracking-[0.2em] uppercase font-bold text-[#b45a12] dark:text-[#f0a04b] mb-3">
               <span className="w-2 h-2 bg-[#d4701a] inline-block" />
-              <span>Certifications &amp; Leadership</span>
+              <span>Certifications &amp; Training</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[13px]">
+              <div className="p-3 bg-[#f3f2ed] dark:bg-[#22211e] border border-[#cfcabb] dark:border-[#38352e]">
+                <div className="font-bold text-[#1c1b18] dark:text-white">ITC Infotech's STEM Education Program</div>
+                <div className="text-[11.5px] text-[#66625a] dark:text-[#a09c91]">Enabling IT Industry Readiness — Corporate Technical Training</div>
+              </div>
+              <div className="p-3 bg-[#f3f2ed] dark:bg-[#22211e] border border-[#cfcabb] dark:border-[#38352e]">
+                <div className="font-bold text-[#1c1b18] dark:text-white">Java Fullstack Training by The Kiran Academy</div>
+                <div className="text-[11.5px] text-[#66625a] dark:text-[#a09c91]">The Kiran Academy, Pune — Core Java, Spring Boot, Hibernate, SQL</div>
+              </div>
               <div className="p-3 bg-[#f3f2ed] dark:bg-[#22211e] border border-[#cfcabb] dark:border-[#38352e]">
                 <div className="font-bold text-[#1c1b18] dark:text-white">Software Programming Developer</div>
                 <div className="text-[11.5px] text-[#66625a] dark:text-[#a09c91]">Career Certification — OOP &amp; Java Fundamentals</div>

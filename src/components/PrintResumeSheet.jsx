@@ -9,7 +9,7 @@ export default function PrintResumeSheet() {
           SOHAIL SHAIKH
         </h1>
         <div className="text-[13px] font-semibold text-neutral-800 tracking-wide uppercase mt-1">
-          Java Full-Stack &amp; Android Developer
+          Java &amp; Spring Boot Developer / QA Automation Engineer
         </div>
         <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 mt-1 text-[11.5px] text-neutral-700">
           <span>Pune, Maharashtra, India</span>
@@ -21,8 +21,6 @@ export default function PrintResumeSheet() {
           <span>linkedin.com/in/sohail-shaikh-z</span>
           <span>•</span>
           <span>github.com/SohailShaikh03</span>
-          <span>•</span>
-          <span>instagram.com/zohell._</span>
         </div>
       </div>
 
@@ -32,7 +30,7 @@ export default function PrintResumeSheet() {
           Professional Summary
         </h2>
         <p className="text-[12px] leading-relaxed text-neutral-900 m-0">
-          Motivated and detail-oriented Java Full-Stack &amp; Android Developer completing a BBA in Computer Applications at ATSS College, Pune (CGPA 8.56 / A+). Proficient in building robust backend services with Java, Servlets, JSP, JDBC, and SQL, alongside native Android mobile applications using Java and Firebase. Hands-on experience developing computer vision accessibility tools and multi-tiered MVC architectures. Immediate availability for 2026.
+          Dedicated Java &amp; Spring Boot Developer and QA Automation Engineer completing a BBA in Computer Applications at ATSS College, Pune (CGPA 8.56 / A+). Proficient in building robust backend services with Java, Spring Boot, Hibernate, SQL, and RESTful APIs, combined with hands-on automated testing skills using Selenium WebDriver, TestNG, Cucumber, and Unit Testing. Passionate about solving complex problems, building reliable software, and open to Software Developer, Java Developer, and QA / Software Tester roles.
         </p>
       </div>
 
@@ -42,23 +40,17 @@ export default function PrintResumeSheet() {
           Technical Skills
         </h2>
         <div className="grid grid-cols-[140px_1fr] gap-y-1 text-[12px]">
-          <span className="font-bold text-neutral-900">Languages:</span>
-          <span>Java (Core &amp; Advanced), SQL, Python, JavaScript (ES6+), HTML5, CSS3</span>
+          <span className="font-bold text-neutral-900">Backend &amp; Core:</span>
+          <span>Java (Core &amp; Advanced), Spring Boot, Hibernate &amp; JPA, SQL (MySQL/PostgreSQL), Servlets, JSP, JDBC</span>
 
-          <span className="font-bold text-neutral-900">Web &amp; Backend:</span>
-          <span>Java Servlets, JSP, JDBC Connectivity, Apache Tomcat, REST APIs, React.js</span>
+          <span className="font-bold text-neutral-900">QA &amp; Automated Testing:</span>
+          <span>Selenium WebDriver, TestNG, Cucumber (BDD), Postman (API Testing), Unit Testing (JUnit), STLC</span>
 
-          <span className="font-bold text-neutral-900">Mobile &amp; Cloud:</span>
-          <span>Android SDK, Java, XML, Firebase (Auth, Realtime DB, Cloud Storage), Material Design</span>
+          <span className="font-bold text-neutral-900">Frontend &amp; UI Stack:</span>
+          <span>HTML5, CSS3, JavaScript (ES6+), React.js, Bootstrap, Tailwind CSS</span>
 
-          <span className="font-bold text-neutral-900">Databases:</span>
-          <span>MySQL, PostgreSQL, SQLite, Relational Database Design &amp; Schema Normalization</span>
-
-          <span className="font-bold text-neutral-900">Core CS Concepts:</span>
-          <span>Object-Oriented Programming (OOP), MVC Architecture, Data Structures, Multithreading</span>
-
-          <span className="font-bold text-neutral-900">Developer Tools:</span>
-          <span>Git, GitHub, Android Studio, Eclipse, VS Code, OpenCV, TensorFlow/Keras</span>
+          <span className="font-bold text-neutral-900">Tools &amp; Workflow:</span>
+          <span>Git, GitHub, Antigravity, Maven, Eclipse, VS Code, Android Studio, MySQL Workbench</span>
         </div>
       </div>
 
@@ -166,15 +158,23 @@ export default function PrintResumeSheet() {
         </div>
       </div>
 
-      {/* Certifications & Leadership */}
+      {/* Certifications & Training */}
       <div>
         <h2 className="text-[12px] font-bold uppercase tracking-wider border-b border-black pb-0.5 mb-1.5 text-black">
-          Certifications &amp; Leadership
+          Certifications &amp; Training
         </h2>
-        <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[11.5px]">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[11px]">
+          <div>
+            <span className="font-bold text-black">• ITC Infotech STEM Program:</span>
+            <span className="text-neutral-800"> IT Industry Readiness Corporate Training</span>
+          </div>
+          <div>
+            <span className="font-bold text-black">• Java Fullstack (The Kiran Academy):</span>
+            <span className="text-neutral-800"> Core Java, Spring Boot, Hibernate, SQL</span>
+          </div>
           <div>
             <span className="font-bold text-black">• Software Programming Developer:</span>
-            <span className="text-neutral-800"> OOP &amp; Java Fundamentals</span>
+            <span className="text-neutral-800"> OOP, Algorithms &amp; Java Fundamentals</span>
           </div>
           <div>
             <span className="font-bold text-black">• Web Development (Udemy):</span>
@@ -186,7 +186,7 @@ export default function PrintResumeSheet() {
           </div>
           <div>
             <span className="font-bold text-black">• Avishkar Research Convention:</span>
-            <span className="text-neutral-800"> Zonal Level ISL Presenter</span>
+            <span className="text-neutral-800"> SPPU Zonal Assistive Tech Presenter</span>
           </div>
         </div>
       </div>

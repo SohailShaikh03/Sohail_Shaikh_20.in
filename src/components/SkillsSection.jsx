@@ -3,7 +3,7 @@ import { sound } from "../utils/sound";
 
 export default function SkillsSection({ groups }) {
   const [selectedGroupId, setSelectedGroupId] = useState(
-    groups[0]?.id || "languages"
+    groups[0]?.id || "backend"
   );
 
   const selectedGroup =
@@ -18,38 +18,34 @@ export default function SkillsSection({ groups }) {
         if (panel) {
           panel.scrollIntoView({ behavior: "smooth", block: "start" });
         }
-      }, 60);
+      }, 50);
     }
   };
 
   return (
-    <section className="flex flex-wrap gap-8 items-stretch font-mono animate-fadeIn">
+    <section className="flex flex-col md:flex-row gap-5 sm:gap-6 items-stretch font-mono animate-fadeIn">
       {/* Left Column: Skill Category Selector */}
-      <div className="flex-1 basis-[280px] max-w-full min-w-0 flex flex-col gap-3">
-        <div className="text-[12px] tracking-[0.2em] uppercase text-[#66625a] dark:text-[#a09c91] pb-1 font-semibold">
-          Select Capability Group:
-        </div>
-
+      <div className="w-full md:w-[320px] lg:w-[360px] flex-none flex flex-col gap-3">
         {groups.map((g) => {
           const isSelected = g.id === selectedGroupId;
           return (
             <button
               key={g.id}
               onClick={() => handleSelectGroup(g.id)}
-              className={`text-left p-4 sm:p-5 w-full block min-h-[44px] transition-all border-2 ${
+              className={`p-4 sm:p-5 text-left border-2 rounded-sm cursor-pointer transition-all ${
                 isSelected
-                  ? "bg-[#1c1b18] dark:bg-[#25231d] text-[#f3f2ed] border-[#1c1b18] dark:border-[#f0a04b] shadow-md -translate-x-1 sm:-translate-x-1.5"
-                  : "bg-[#fbfaf6] dark:bg-[#191815] text-[#1c1b18] dark:text-[#f3f2ed] border-[#1c1b18] dark:border-[#38352e] hover:bg-[#eae8e0] dark:hover:bg-[#22211c]"
+                  ? "bg-[#1c1b18] text-white dark:bg-[#201f1a] dark:text-white border-[#1c1b18] dark:border-[#d4701a] shadow-md"
+                  : "bg-white text-[#1c1b18] dark:bg-[#1a1916] dark:text-[#eae6dd] border-[#1c1b18] dark:border-[#38352e] hover:bg-[#eae8e0] dark:hover:bg-[#25231e]"
               }`}
             >
               <div
-                className={`text-[11.5px] sm:text-[12px] tracking-[0.16em] sm:tracking-[0.18em] uppercase ${
-                  isSelected ? "text-[#f0a04b]" : "opacity-70 text-[#66625a] dark:text-[#a09c91]"
+                className={`text-[11px] sm:text-[11.5px] tracking-[0.18em] uppercase ${
+                  isSelected ? "text-[#f0a04b]" : "text-[#66625a] dark:text-[#a09c91]"
                 }`}
               >
-                {g.items.length} Modules Documented
+                {g.items.length} MODULES
               </div>
-              <div className="font-display font-black text-[24px] sm:text-[34px] leading-[1.05] uppercase mt-1 tracking-wide">
+              <div className="font-display font-black text-[22px] sm:text-[26px] leading-tight uppercase mt-2 tracking-wide">
                 {g.label}
               </div>
             </button>
@@ -57,45 +53,37 @@ export default function SkillsSection({ groups }) {
         })}
       </div>
 
-      {/* Right Column: Equipment List Panel */}
+      {/* Right Column: Skill Items Inspector Panel */}
       <div
         id="skills-inspector"
-        className="flex-[2] basis-[460px] min-w-0 bg-[#fbfaf6] dark:bg-[#191815] border-2 border-[#1c1b18] dark:border-[#38352e] p-4 sm:p-8 md:p-10 flex flex-col gap-3 shadow-md rounded-sm scroll-mt-6"
+        className="flex-1 min-w-0 bg-[#181715] text-[#f4f3ef] border-2 border-[#181715] dark:border-[#38352e] p-5 sm:p-8 md:p-10 rounded-sm shadow-xl flex flex-col justify-between gap-6 scroll-mt-4"
       >
-        {/* Header */}
-        <div className="flex items-center justify-between border-b-2 border-[#1c1b18] dark:border-[#38352e] pb-3 mb-2">
-          <div className="text-[13px] tracking-[0.2em] uppercase font-bold text-[#b45a12] dark:text-[#f0a04b]">
-            {selectedGroup.label}: Equipment &amp; Tooling
-          </div>
-          <div className="text-[11px] tracking-[0.14em] uppercase text-[#66625a] dark:text-[#a09c91]">
-            STATUS: VERIFIED
-          </div>
+        <div className="flex justify-between items-center text-[11.5px] sm:text-[12.5px] tracking-[0.2em] uppercase text-[#d4701a] font-semibold border-b border-[#2d2b26] pb-3">
+          <span>READING SKILL SPECIFICATION: {selectedGroup.label}</span>
+          <span>STATUS: VERIFIED</span>
         </div>
 
-        {/* Skill Items Table */}
-        <div className="divide-y divide-[#cfcabb] dark:divide-[#38352e]">
+        <div className="divide-y divide-[#2d2b26]">
           {selectedGroup.items.map((item, idx) => (
             <div
               key={idx}
-              className="flex flex-wrap items-center justify-between gap-y-1 gap-x-4 py-3.5 hover:bg-[#f3f2ed] dark:hover:bg-[#22211c] px-2 transition-colors rounded-sm"
+              className="py-3 sm:py-3.5 flex flex-wrap items-center justify-between gap-2"
             >
-              {/* Skill Name */}
-              <div className="flex items-center gap-3">
-                <span className="w-1.5 h-1.5 bg-[#d4701a]" aria-hidden="true" />
-                <span className="text-[17px] font-semibold text-[#1c1b18] dark:text-[#f3f2ed]">
+              <div className="flex items-center gap-2.5">
+                <span className="w-1.5 h-1.5 bg-[#d4701a] flex-none" />
+                <span className="text-[16px] sm:text-[17px] font-bold text-white tracking-wide">
                   {item.name}
                 </span>
               </div>
 
-              {/* Badges: Level & Used In */}
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-2 text-[11px] sm:text-[11.5px]">
                 {item.used && (
-                  <span className="text-[12px] tracking-[0.12em] uppercase text-[#66625a] dark:text-[#a09c91] bg-[#eae8e0] dark:bg-[#25231e] px-2.5 py-1 border border-[#cfcabb] dark:border-[#38352e]">
-                    Used in {item.used}
+                  <span className="text-[#a39d8e] bg-[#22201b] border border-[#3e3b33] px-2 py-0.5">
+                    {item.used}
                   </span>
                 )}
                 {item.level && (
-                  <span className="text-[11px] tracking-[0.1em] uppercase font-bold text-[#1c1b18] dark:text-[#f3f2ed] border border-[#1c1b18] dark:border-[#f0a04b] px-2 py-0.5">
+                  <span className="text-[#f0a04b] border border-[#f0a04b]/50 px-2 py-0.5 font-bold">
                     {item.level}
                   </span>
                 )}
@@ -104,10 +92,9 @@ export default function SkillsSection({ groups }) {
           ))}
         </div>
 
-        {/* Tactical Footer Note */}
-        <div className="mt-auto pt-6 text-[12px] text-[#66625a] dark:text-[#a09c91] tracking-[0.08em] border-t border-[#cfcabb] dark:border-[#38352e] flex justify-between items-center">
-          <span>SOURCE: ATSS College Curriculum &amp; Project Codebases</span>
-          <span className="font-bold text-[#1c1b18] dark:text-[#f3f2ed]">DEV BUREAU VERIFIED</span>
+        <div className="mt-auto pt-6 border-t border-[#2d2b26] flex items-center justify-between text-[11.5px] uppercase tracking-[0.14em]">
+          <span className="text-[#a39d8e]">TECH STACK VERIFICATION</span>
+          <span className="font-bold text-[#f0a04b]">DEV BUREAU CLEARED</span>
         </div>
       </div>
     </section>

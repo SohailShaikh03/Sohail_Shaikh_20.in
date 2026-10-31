@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { sound } from "../utils/sound";
-import { ExternalLink, Code2 } from "lucide-react";
+import { ExternalLink } from "lucide-react";
+import { GithubIcon } from "./BrandIcons";
 
 export default function ProjectsSection({ projects }) {
-  const [selectedId, setSelectedId] = useState(projects[0]?.id || "orbit");
+  const [selectedId, setSelectedId] = useState(projects[0]?.id || "roots");
 
   const selectedProject =
     projects.find((p) => p.id === selectedId) || projects[0];
@@ -17,194 +18,106 @@ export default function ProjectsSection({ projects }) {
         if (inspector) {
           inspector.scrollIntoView({ behavior: "smooth", block: "start" });
         }
-      }, 60);
+      }, 50);
     }
   };
 
   return (
-    <section className="flex flex-wrap gap-8 items-stretch font-mono animate-fadeIn">
-      {/* Left Column: File Catalog Cards */}
-      <div className="flex-1 basis-[320px] max-w-full min-w-0 flex flex-col gap-3">
-        <div className="text-[12px] tracking-[0.2em] uppercase text-[#66625a] pb-1 font-semibold flex items-center justify-between">
-          <span>Select Project File:</span>
-          <span className="text-[11px] text-[#a39d8e]">[{projects.length} PROJECTS]</span>
-        </div>
-
+    <section className="flex flex-col md:flex-row gap-5 sm:gap-6 items-stretch font-mono animate-fadeIn">
+      {/* Left Column: Stacked Project File Cards */}
+      <div className="w-full md:w-[320px] lg:w-[360px] flex-none flex flex-col gap-3">
         {projects.map((proj) => {
           const isSelected = proj.id === selectedId;
           return (
             <div
               key={proj.id}
               onClick={() => handleSelectProject(proj.id)}
-              className={`text-left p-4 sm:p-5 w-full block min-h-[44px] transition-all border-2 cursor-pointer ${
+              className={`p-4 sm:p-5 border-2 rounded-sm cursor-pointer transition-all ${
                 isSelected
-                  ? "bg-[#1c1b18] dark:bg-[#25231d] text-[#f3f2ed] border-[#1c1b18] dark:border-[#f0a04b] shadow-md -translate-x-1 sm:-translate-x-1.5"
-                  : "bg-[#fbfaf6] dark:bg-[#191815] text-[#1c1b18] dark:text-[#f3f2ed] border-[#1c1b18] dark:border-[#38352e] hover:bg-[#eae8e0] dark:hover:bg-[#22211c]"
+                  ? "bg-[#1c1b18] text-white dark:bg-[#201f1a] dark:text-white border-[#1c1b18] dark:border-[#d4701a] shadow-md"
+                  : "bg-white text-[#1c1b18] dark:bg-[#1a1916] dark:text-[#eae6dd] border-[#1c1b18] dark:border-[#38352e] hover:bg-[#eae8e0] dark:hover:bg-[#25231e]"
               }`}
             >
-              {/* File header */}
-              <div className="flex justify-between items-center gap-2 text-[11.5px] sm:text-[12px] tracking-[0.16em] sm:tracking-[0.18em] uppercase">
-                <span className={isSelected ? "text-[#f0a04b]" : "opacity-70 font-semibold"}>
-                  File {proj.code}
+              {/* Header meta */}
+              <div className="flex justify-between items-center text-[11px] sm:text-[11.5px] tracking-[0.18em] uppercase">
+                <span className={isSelected ? "text-[#f0a04b]" : "text-[#66625a] dark:text-[#a09c91]"}>
+                  FILE {proj.code}
                 </span>
-                <span
-                  className={`text-[10.5px] sm:text-[11px] px-2 py-0.5 border ${
-                    isSelected ? "border-[#f0a04b]/40 text-[#f0a04b]" : "border-current opacity-70"
-                  }`}
-                >
+                <span className={isSelected ? "text-[#f0a04b]" : "text-[#66625a] dark:text-[#a09c91]"}>
                   {proj.kind}
                 </span>
               </div>
 
               {/* Title */}
-              <div className="font-display font-black text-[26px] sm:text-[38px] leading-[1.05] uppercase mt-1.5 sm:mt-2 tracking-wide">
+              <div className="font-display font-black text-[28px] sm:text-[34px] leading-none uppercase mt-2 tracking-wide">
                 {proj.title}
               </div>
-
-              {/* Subtitle */}
-              <div
-                className={`text-[12px] mt-1.5 truncate ${
-                  isSelected ? "text-[#e6e2d6]" : "text-[#66625a]"
-                }`}
-              >
-                {proj.type}
-              </div>
-
-              {/* Tech Badges Preview */}
-              <div className="flex flex-wrap gap-1.5 mt-3 pt-2.5 border-t border-current/15 text-[11px]">
-                {proj.tags.slice(0, 4).map((tag, idx) => (
-                  <span
-                    key={idx}
-                    className={`px-1.5 py-0.5 rounded text-[10.5px] ${
-                      isSelected
-                        ? "bg-white/10 text-[#f3f2ed]"
-                        : "bg-black/5 text-[#4a473f]"
-                    }`}
-                  >
-                    {tag}
-                  </span>
-                ))}
-                {proj.tags.length > 4 && (
-                  <span className="opacity-60 text-[10px] self-center">
-                    +{proj.tags.length - 4}
-                  </span>
-                )}
-              </div>
-
-              {/* Direct GitHub Link on Card */}
-              {proj.repoUrl && (
-                <div className="mt-3 pt-2 flex items-center justify-between text-[11px]">
-                  <a
-                    href={proj.repoUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      sound.playClick();
-                    }}
-                    className={`inline-flex items-center gap-1 font-bold underline underline-offset-2 ${
-                      isSelected
-                        ? "text-[#f0a04b] hover:text-white"
-                        : "text-[#b45a12] hover:text-[#1c1b18]"
-                    }`}
-                  >
-                    <span>GitHub Repo</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
-                  <span className="text-[10px] opacity-60">
-                    {isSelected ? "ACTIVE FILE" : "CLICK TO INSPECT"}
-                  </span>
-                </div>
-              )}
             </div>
           );
         })}
       </div>
 
-      {/* Right Column: Full File Inspector (Dark Dossier Screen) */}
+      {/* Right Column: Active Project Reading Card (Black Panel) */}
       <div
         id="project-inspector"
-        className="flex-[2] basis-[460px] min-w-0 bg-[#1c1b18] dark:bg-[#191815] text-[#f3f2ed] p-5 sm:p-8 md:p-10 flex flex-col gap-5 sm:gap-6 border-2 border-[#1c1b18] dark:border-[#38352e] shadow-lg rounded-sm scroll-mt-6"
+        className="flex-1 min-w-0 bg-[#181715] text-[#f4f3ef] border-2 border-[#181715] dark:border-[#38352e] p-5 sm:p-8 md:p-10 rounded-sm shadow-xl flex flex-col justify-between gap-6 scroll-mt-4"
       >
-        {/* Top File Meta */}
-        <div className="flex flex-wrap justify-between items-center gap-2 text-[11.5px] sm:text-[12px] tracking-[0.16em] sm:tracking-[0.2em] uppercase text-[#f0a04b] font-medium border-b border-[#33312b] pb-3">
+        {/* Top Header */}
+        <div className="flex justify-between items-center text-[11.5px] sm:text-[12.5px] tracking-[0.2em] uppercase text-[#d4701a] font-semibold border-b border-[#2d2b26] pb-3">
           <span>READING FILE {selectedProject.code}</span>
-          <span className="text-[#a39d8e]">CLASSIFICATION: {selectedProject.kind}</span>
+          <span>{selectedProject.kind}</span>
         </div>
 
-        {/* Project Headline & Title */}
+        {/* Big Project Title */}
         <div>
-          <h2 className="m-0 font-display font-black text-[clamp(34px,7vw,86px)] leading-[0.95] uppercase tracking-wide text-white">
+          <h3 className="m-0 font-display font-black text-[clamp(44px,7.5vw,84px)] uppercase leading-[0.92] text-white tracking-wide">
             {selectedProject.title}
-          </h2>
-          <div className="text-[12.5px] sm:text-[13.5px] tracking-[0.14em] sm:tracking-[0.16em] uppercase text-[#d4701a] font-semibold mt-1">
+          </h3>
+          <div className="text-[12.5px] tracking-[0.14em] uppercase text-[#a39d8e] mt-1.5 font-medium">
             {selectedProject.type}
           </div>
         </div>
 
-        {/* Project Description (What the project is) */}
-        <div className="flex flex-col gap-2">
-          <div className="text-[11px] tracking-[0.2em] uppercase text-[#a39d8e] font-semibold">
-            ABOUT THIS PROJECT:
-          </div>
-          <p className="m-0 max-w-[62ch] text-[16px] leading-[1.7] text-[#e6e2d6]">
-            {selectedProject.blurb}
-          </p>
-        </div>
+        {/* Project Description */}
+        <p className="m-0 text-[15px] sm:text-[16px] leading-[1.7] text-[#dedad0] max-w-[65ch]">
+          {selectedProject.blurb}
+        </p>
 
-        {/* Functional Capabilities & Architecture Highlights */}
+        {/* Bullet Points */}
         {selectedProject.points && selectedProject.points.length > 0 && (
-          <div className="bg-[#22211e] p-5 border-l-4 border-[#d4701a] rounded-sm">
-            <div className="text-[11px] tracking-[0.2em] uppercase text-[#f0a04b] font-bold mb-3 flex items-center gap-2">
-              <Code2 className="w-4 h-4 text-[#d4701a]" />
-              <span>CORE FUNCTIONALITY & ARCHITECTURE:</span>
-            </div>
-            <ul className="m-0 pl-5 flex flex-col gap-2.5 text-[14.5px] text-[#e6e2d6] leading-relaxed list-disc">
-              {selectedProject.points.map((pt, idx) => (
-                <li key={idx}>{pt}</li>
-              ))}
-            </ul>
-          </div>
+          <ul className="m-0 pl-4 sm:pl-5 flex flex-col gap-2 text-[14px] sm:text-[15px] leading-relaxed text-[#c4bfb3] list-disc">
+            {selectedProject.points.map((pt, idx) => (
+              <li key={idx}>{pt}</li>
+            ))}
+          </ul>
         )}
 
-        {/* Status / Scope Note */}
-        {selectedProject.note && (
-          <div className="text-[13px] border-2 border-dashed border-[#f0a04b]/60 p-3.5 text-[#f0a04b] bg-[#f0a04b]/5">
-            <span className="font-bold mr-1.5">[TECHNICAL SCOPE]:</span>
-            {selectedProject.note}
-          </div>
-        )}
-
-        {/* Tech Stack & GitHub Action Link */}
-        <div className="mt-auto pt-6 border-t border-[#33312b] flex flex-col sm:flex-row sm:items-center justify-between gap-5">
-          {/* Tech Badges */}
-          <div className="flex flex-col gap-2">
-            <div className="text-[10.5px] tracking-[0.18em] uppercase text-[#a39d8e] font-bold">
-              TECH STACK:
-            </div>
-            <div className="flex flex-wrap gap-2 text-[12px] tracking-[0.06em]">
-              {selectedProject.tags.map((tag, idx) => (
-                <span
-                  key={idx}
-                  className="border border-[#e6e2d6]/30 text-[#e6e2d6] px-2.5 py-1 bg-black/40 font-medium"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
+        {/* Badges & Repo Button */}
+        <div className="mt-auto pt-6 border-t border-[#2d2b26] flex flex-wrap items-center justify-between gap-4">
+          {/* Tags */}
+          <div className="flex flex-wrap items-center gap-2">
+            {selectedProject.tags?.map((tag, idx) => (
+              <span
+                key={idx}
+                className="px-2.5 py-1 border border-[#3e3b33] bg-[#22201b] text-[#eae6dd] text-[11px] tracking-[0.14em] uppercase font-bold"
+              >
+                {tag}
+              </span>
+            ))}
           </div>
 
-          {/* GitHub Source Link Button */}
+          {/* GitHub Link */}
           {selectedProject.repoUrl && (
             <a
               href={selectedProject.repoUrl}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => sound.playClick()}
-              className="inline-flex items-center justify-center gap-2 px-5 py-3 border-2 border-[#f0a04b] text-[#f0a04b] hover:bg-[#f0a04b] hover:text-[#1c1b18] text-[12.5px] tracking-[0.14em] uppercase font-bold transition-all no-underline shadow-sm flex-none active:translate-y-0.5"
+              className="inline-flex items-center gap-2 px-4 py-2 border border-[#f0a04b] text-[#f0a04b] hover:bg-[#f0a04b] hover:text-[#181715] text-[12px] tracking-[0.14em] uppercase font-bold transition-all no-underline shadow-sm active:translate-y-0.5"
             >
-              <span>GITHUB REPO</span>
-              <ExternalLink className="w-4 h-4" />
+              <GithubIcon className="w-3.5 h-3.5" />
+              <span>SOURCE REPO</span>
+              <ExternalLink className="w-3.5 h-3.5" />
             </a>
           )}
         </div>

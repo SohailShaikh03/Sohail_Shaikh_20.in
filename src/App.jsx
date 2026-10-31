@@ -4,8 +4,9 @@ import TopBar from "./components/TopBar";
 import HeroDossier from "./components/HeroDossier";
 import ArchiveNav from "./components/ArchiveNav";
 import ProjectsSection from "./components/ProjectsSection";
+import CertificatesSection from "./components/CertificatesSection";
+import EducationSection from "./components/EducationSection";
 import SkillsSection from "./components/SkillsSection";
-import RecordSection from "./components/RecordSection";
 import ContactSection from "./components/ContactSection";
 import ReviewsSection from "./components/ReviewsSection";
 import Footer from "./components/Footer";
@@ -73,62 +74,57 @@ export default function App() {
 
   return (
     <>
-      {/* 1. Normal Interactive Web App Layout (hidden when printing) */}
-      <div className="web-app-view bg-[#f3f2ed] dark:bg-[#12110e] text-[#1c1b18] dark:text-[#f3f2ed] font-mono min-h-screen px-4 sm:px-6 md:px-8 pb-16 selection:bg-[#d4701a] selection:text-white transition-colors duration-200">
-        <div className="max-w-[1200px] mx-auto flex flex-col gap-10 sm:gap-14 md:gap-16">
+      {/* 1. Main Interactive Layout */}
+      <div className="web-app-view bg-[#f4f3ef] dark:bg-[#12110e] text-[#1c1b18] dark:text-[#f3f2ed] font-mono min-h-screen px-4 sm:px-6 md:px-10 pb-12 selection:bg-[#d4701a] selection:text-white transition-colors duration-200">
+        <div className="max-w-[1140px] mx-auto flex flex-col gap-8 sm:gap-10">
           {/* Top Header Bar */}
           <TopBar
             soundMuted={soundMuted}
             onToggleSound={toggleSound}
-            onOpenReviews={handleOpenReviews}
             darkMode={darkMode}
             onToggleDarkMode={toggleDarkMode}
             onOpenResume={handleOpenResume}
           />
 
-          {/* Hero Section & Dossier Identity Card */}
+          {/* Hero Section & About Me Dossier Card */}
           <HeroDossier
             data={portfolioData.personnel}
             onOpenProjects={handleOpenProjects}
-            onOpenReviews={handleOpenReviews}
             onOpenResume={handleOpenResume}
           />
 
-          {/* Section Navigation Tabs */}
-          <div id="archive-navigator">
+          {/* Section Navigation Tabs: 5 Tabs (Certificates, Projects, Education, Skills, Reviews) */}
+          <div id="archive-navigator" className="scroll-mt-4">
             <ArchiveNav
               activeTab={activeTab}
               onSelectTab={setActiveTab}
             />
           </div>
 
-          {/* Dynamic Archive Sections with Tactile Framer Motion Spring Animations */}
+          {/* Active File Content Area */}
           <main className="min-h-[420px]">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeTab}
-                initial={{ opacity: 0, y: 14, scale: 0.995 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -10, scale: 0.995 }}
-                transition={{ duration: 0.22, ease: "easeOut" }}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.18, ease: "easeOut" }}
               >
+                {activeTab === "certificates" && (
+                  <CertificatesSection commendations={portfolioData.commendations} />
+                )}
+
                 {activeTab === "projects" && (
                   <ProjectsSection projects={portfolioData.projects} />
                 )}
 
+                {activeTab === "education" && (
+                  <EducationSection education={portfolioData.educationRecords} />
+                )}
+
                 {activeTab === "skills" && (
                   <SkillsSection groups={portfolioData.skillGroups} />
-                )}
-
-                {activeTab === "record" && (
-                  <RecordSection
-                    education={portfolioData.educationRecords}
-                    commendations={portfolioData.commendations}
-                  />
-                )}
-
-                {activeTab === "contact" && (
-                  <ContactSection data={portfolioData.personnel} />
                 )}
 
                 {activeTab === "reviews" && (
@@ -138,7 +134,10 @@ export default function App() {
             </AnimatePresence>
           </main>
 
-          {/* Footer */}
+          {/* Contact Banner: 'HIRING A FIRST-YEAR DEVELOPER?' */}
+          <ContactSection data={portfolioData.personnel} />
+
+          {/* Footer Bar */}
           <Footer
             fileCode={portfolioData.personnel.fileCode}
             location="PUNE, IN"
@@ -154,7 +153,7 @@ export default function App() {
         data={portfolioData.personnel}
       />
 
-      {/* 3. Dedicated Print-Media Sheet (Prints Sohail's full Resume cleanly upon window.print() / PRINT FILE) */}
+      {/* 3. Dedicated Print-Media Sheet */}
       <PrintResumeSheet />
     </>
   );
