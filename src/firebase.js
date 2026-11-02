@@ -4,15 +4,15 @@ import { getFirestore } from "firebase/firestore";
 const clean = (val) => (val || "").toString().trim().replace(/^[",']+|[",',]+$/g, "").trim();
 
 const firebaseConfig = {
-  apiKey: clean(import.meta.env.VITE_FIREBASE_API_KEY),
-  authDomain: clean(import.meta.env.VITE_FIREBASE_AUTH_DOMAIN),
-  projectId: clean(import.meta.env.VITE_FIREBASE_PROJECT_ID),
-  storageBucket: clean(import.meta.env.VITE_FIREBASE_STORAGE_BUCKET),
-  messagingSenderId: clean(import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID),
-  appId: clean(import.meta.env.VITE_FIREBASE_APP_ID)
+  apiKey: clean(import.meta.env.VITE_FIREBASE_API_KEY) || "AIzaSyCuJ0r3OnDY0Rk4GnqmsCgDjA65Tv-5FZE",
+  authDomain: clean(import.meta.env.VITE_FIREBASE_AUTH_DOMAIN) || "sohail-portfolio-25f9f.firebaseapp.com",
+  projectId: clean(import.meta.env.VITE_FIREBASE_PROJECT_ID) || "sohail-portfolio-25f9f",
+  storageBucket: clean(import.meta.env.VITE_FIREBASE_STORAGE_BUCKET) || "sohail-portfolio-25f9f.firebasestorage.app",
+  messagingSenderId: clean(import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID) || "850357509625",
+  appId: clean(import.meta.env.VITE_FIREBASE_APP_ID) || "1:850357509625:web:176af255aa178eecdf3128"
 };
 
-// Check if credentials are present and not default placeholders
+// Check if credentials are present and valid
 export const isFirebaseConfigured = Boolean(
   firebaseConfig.apiKey &&
   firebaseConfig.projectId &&
