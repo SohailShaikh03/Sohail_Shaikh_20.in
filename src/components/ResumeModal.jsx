@@ -136,7 +136,7 @@ LANGUAGES
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 bg-black/80 backdrop-blur-sm animate-fadeIn">
       {/* Modal Dialog */}
       <div className="relative w-full max-w-4xl max-h-[92vh] flex flex-col bg-[#fbfaf6] dark:bg-[#1a1916] text-[#1c1b18] dark:text-[#f3f2ed] border-2 border-[#1c1b18] dark:border-[#3e3b33] rounded-sm shadow-2xl overflow-hidden font-mono">
-        
+
         {/* Top Control Bar */}
         <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 sm:p-4 bg-[#1c1b18] text-[#f3f2ed] border-b-2 border-[#1c1b18] dark:border-[#3e3b33] flex-none">
           <div className="flex items-center gap-2.5">
@@ -200,7 +200,7 @@ LANGUAGES
 
         {/* Scrollable Document Container */}
         <div className="overflow-y-auto p-5 sm:p-8 md:p-10 space-y-7 selection:bg-[#d4701a] selection:text-white">
-          
+
           {/* Resume Header */}
           <div className="border-b-2 border-[#1c1b18] dark:border-[#3e3b33] pb-6">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -211,7 +211,7 @@ LANGUAGES
                 AVAILABLE FOR PLACEMENT // 2026 BATCH
               </span>
             </div>
-            
+
             <div className="text-[16px] sm:text-[18px] font-bold text-[#b45a12] dark:text-[#f0a04b] mt-1.5 uppercase tracking-wider">
               Java &amp; Spring Boot Developer / QA Automation Engineer
             </div>
@@ -318,7 +318,7 @@ LANGUAGES
               <span className="w-2 h-2 bg-[#d4701a] inline-block" />
               <span>Selected Projects</span>
             </div>
-            
+
             <div className="space-y-4">
               {/* Project 1: Orbit */}
               <div className="p-4 bg-[#fbfaf6] dark:bg-[#22211e] border-2 border-[#1c1b18] dark:border-[#38352e] rounded-sm">
@@ -424,7 +424,7 @@ LANGUAGES
                   <div className="text-[12px] text-[#66625a] dark:text-[#a09c91]">Lion's Club School &amp; Junior College, Pune — Maharashtra State Board</div>
                 </div>
                 <div className="text-right">
-                  <span className="font-bold text-[#d4701a]">71.00%</span>
+                  <span className="font-bold text-[#d4701a]">71.50%</span>
                   <div className="text-[11px] text-[#66625a] dark:text-[#a09c91]">2021 – 2023</div>
                 </div>
               </div>
@@ -435,7 +435,7 @@ LANGUAGES
                   <div className="text-[12px] text-[#66625a] dark:text-[#a09c91]">Samson Memorial Republic High School, Pune — Maharashtra State Board</div>
                 </div>
                 <div className="text-right">
-                  <span className="font-bold text-[#d4701a]">75.50%</span>
+                  <span className="font-bold text-[#d4701a]">75%</span>
                   <div className="text-[11px] text-[#66625a] dark:text-[#a09c91]">2020 – 2021</div>
                 </div>
               </div>

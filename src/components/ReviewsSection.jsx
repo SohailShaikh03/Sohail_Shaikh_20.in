@@ -1,5 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { sound } from "../utils/sound";
+import { portfolioData } from "../data/portfolioData";
+import { db, isFirebaseConfigured } from "../firebase";
+import {
+  collection,
+  addDoc,
+  onSnapshot,
+  query,
+  orderBy,
+  serverTimestamp,
+  doc,
+  updateDoc,
+  deleteDoc,
+  increment
+} from "firebase/firestore";
 import {
   Plus,
   Star,
@@ -8,7 +22,8 @@ import {
   CheckCircle2,
   X,
   Send,
-  Trash2
+  Trash2,
+  Loader2
 } from "lucide-react";
 
 // Clean, pleasant post-it note palettes
@@ -59,18 +74,25 @@ const COLOR_THEMES = [
 
 export default function ReviewsSection() {
   const [reviews, setReviews] = useState(() => {
+    const verified = portfolioData.communityReviews || [];
     try {
       const stored = localStorage.getItem("sohail_portfolio_user_reviews");
       if (stored) {
         const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) return parsed;
+        if (Array.isArray(parsed)) {
+          const verifiedIds = new Set(verified.map((r) => r.id));
+          const localOnly = parsed.filter((r) => !verifiedIds.has(r.id));
+          return [...verified, ...localOnly];
+        }
       }
     } catch {
       // Ignore
     }
-    return [];
+    return verified;
   });
 
+  const [isLoading, setIsLoading] = useState(isFirebaseConfigured);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
@@ -82,34 +104,104 @@ export default function ReviewsSection() {
   const [selectedTheme, setSelectedTheme] = useState("amber");
   const [formError, setFormError] = useState("");
 
-  // Sync to localStorage
+  // Real-time Firestore sync
   useEffect(() => {
+    if (!db) {
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      localStorage.setItem("sohail_portfolio_user_reviews", JSON.stringify(reviews));
-    } catch {
-      // Ignore
+      const q = query(collection(db, "reviews"), orderBy("createdAt", "desc"));
+      const unsubscribe = onSnapshot(
+        q,
+        (snapshot) => {
+          const cloudReviews = snapshot.docs.map((docSnap) => {
+            const data = docSnap.data();
+            return {
+              id: docSnap.id,
+              author: data.author || "Anonymous",
+              role: data.role || "Peer Reviewer",
+              message: data.message || "",
+              rating: typeof data.rating === "number" ? data.rating : 5,
+              theme: data.theme || "amber",
+              likes: typeof data.likes === "number" ? data.likes : 1,
+              date: data.date || "Recently",
+              isCloud: true
+            };
+          });
+
+          // Merge cloud reviews with verified entries from portfolioData
+          const verified = portfolioData.communityReviews || [];
+          const cloudIds = new Set(cloudReviews.map((r) => r.id));
+          const combined = [...cloudReviews, ...verified.filter((v) => !cloudIds.has(v.id))];
+
+          setReviews(combined);
+          setIsLoading(false);
+        },
+        (err) => {
+          console.warn("Firestore listener error, using local/static reviews:", err);
+          setIsLoading(false);
+        }
+      );
+
+      return () => unsubscribe();
+    } catch (err) {
+      console.warn("Error setting up Firestore listener:", err);
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Sync fallback reviews to localStorage
+  useEffect(() => {
+    if (!isFirebaseConfigured) {
+      try {
+        localStorage.setItem("sohail_portfolio_user_reviews", JSON.stringify(reviews));
+      } catch {
+        // Ignore
+      }
     }
   }, [reviews]);
 
   const showToast = (msg) => {
     setToastMessage(msg);
-    setTimeout(() => setToastMessage(""), 3000);
+    setTimeout(() => setToastMessage(""), 3500);
   };
 
-  const handleLike = (id) => {
+  const handleLike = async (id) => {
     sound.playTick();
     setReviews((prev) =>
       prev.map((r) => (r.id === id ? { ...r, likes: (r.likes || 0) + 1 } : r))
     );
+
+    if (db) {
+      try {
+        const reviewRef = doc(db, "reviews", id);
+        await updateDoc(reviewRef, {
+          likes: increment(1)
+        });
+      } catch (err) {
+        console.warn("Firestore like update error:", err);
+      }
+    }
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     sound.playClick();
     setReviews((prev) => prev.filter((r) => r.id !== id));
+
+    if (db) {
+      try {
+        const reviewRef = doc(db, "reviews", id);
+        await deleteDoc(reviewRef);
+      } catch (err) {
+        console.warn("Firestore delete error:", err);
+      }
+    }
     showToast("Review deleted.");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!author.trim()) {
       setFormError("Please enter your name.");
@@ -120,9 +212,10 @@ export default function ReviewsSection() {
       return;
     }
 
-    sound.playSuccess();
+    setIsSubmitting(true);
+    setFormError("");
+
     const newReview = {
-      id: "rev-" + Date.now(),
       author: author.trim(),
       role: role.trim() || "Peer Reviewer",
       message: message.trim(),
@@ -136,13 +229,40 @@ export default function ReviewsSection() {
       })
     };
 
-    setReviews((prev) => [newReview, ...prev]);
+    if (db) {
+      try {
+        await addDoc(collection(db, "reviews"), {
+          ...newReview,
+          createdAt: serverTimestamp()
+        });
+        sound.playSuccess();
+        setIsModalOpen(false);
+        setAuthor("");
+        setRole("");
+        setMessage("");
+        setRating(5);
+        setIsSubmitting(false);
+        showToast("✓ Thank you! Your review has been saved to Firebase.");
+        return;
+      } catch (err) {
+        console.error("Firestore submission error:", err);
+        // Fall back to local storage addition below
+      }
+    }
+
+    // Local / fallback mode
+    sound.playSuccess();
+    const localReview = {
+      id: "rev-" + Date.now(),
+      ...newReview
+    };
+    setReviews((prev) => [localReview, ...prev]);
     setIsModalOpen(false);
     setAuthor("");
     setRole("");
     setMessage("");
     setRating(5);
-    setFormError("");
+    setIsSubmitting(false);
     showToast("✓ Thank you! Your review has been added to the board.");
   };
 
@@ -203,13 +323,27 @@ export default function ReviewsSection() {
             </span>
           )}
         </div>
-        <div className="text-[11px] text-[#a39d8e] dark:text-[#736e63]">
-          [VISITOR FEEDBACK BOARD]
+        <div className="flex items-center gap-2 text-[11px] text-[#a39d8e] dark:text-[#736e63]">
+          {isFirebaseConfigured ? (
+            <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              [LIVE FIREBASE SYNC]
+            </span>
+          ) : (
+            <span>[VISITOR FEEDBACK BOARD]</span>
+          )}
         </div>
       </div>
 
-      {/* Reviews Grid or Empty State */}
-      {reviews.length === 0 ? (
+      {/* Loading state */}
+      {isLoading ? (
+        <div className="p-16 border-2 border-[#cfcabb] dark:border-[#38352e] bg-[#fbfaf6] dark:bg-[#191815] text-center flex flex-col items-center justify-center gap-3 my-2">
+          <Loader2 className="w-6 h-6 animate-spin text-[#d4701a]" />
+          <span className="text-sm font-mono text-[#66625a] dark:text-[#a09c91] uppercase tracking-wider">
+            Connecting to Firebase live board...
+          </span>
+        </div>
+      ) : reviews.length === 0 ? (
         /* Empty State */
         <div className="p-12 sm:p-16 border-2 border-dashed border-[#cfcabb] dark:border-[#38352e] bg-[#fbfaf6] dark:bg-[#191815] text-center flex flex-col items-center justify-center gap-4 my-2">
           <div className="w-14 h-14 rounded-full bg-[#eae8e0] dark:bg-[#25231e] border-2 border-[#1c1b18] dark:border-[#38352e] flex items-center justify-center text-[#d4701a]">
@@ -312,7 +446,7 @@ export default function ReviewsSection() {
             <div className="flex items-center justify-between border-b-2 border-[#1c1b18] dark:border-[#38352e] pb-3">
               <div>
                 <div className="text-[11px] tracking-[0.2em] uppercase font-bold text-[#b45a12] dark:text-[#f0a04b]">
-                  PUBLIC TESTIMONIAL FORM
+                  {isFirebaseConfigured ? "PUBLIC CLOUD TESTIMONIAL FORM" : "PUBLIC TESTIMONIAL FORM"}
                 </div>
                 <h3 className="m-0 font-display font-black text-2xl uppercase tracking-wide text-[#1c1b18] dark:text-white">
                   Write a Review
@@ -340,7 +474,7 @@ export default function ReviewsSection() {
               {/* Name & Role */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider font-bold text-[#1c1b18] mb-1">
+                  <label className="block text-[11px] uppercase tracking-wider font-bold text-[#1c1b18] dark:text-[#f3f2ed] mb-1">
                     Your Name *
                   </label>
                   <input
@@ -349,12 +483,12 @@ export default function ReviewsSection() {
                     value={author}
                     onChange={(e) => setAuthor(e.target.value)}
                     placeholder="e.g. John Doe"
-                    className="w-full px-3 py-2 border-2 border-[#1c1b18] bg-white text-sm focus:outline-none focus:border-[#d4701a]"
+                    className="w-full px-3 py-2 border-2 border-[#1c1b18] dark:border-[#38352e] bg-white dark:bg-[#25231e] text-sm focus:outline-none focus:border-[#d4701a]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider font-bold text-[#1c1b18] mb-1">
+                  <label className="block text-[11px] uppercase tracking-wider font-bold text-[#1c1b18] dark:text-[#f3f2ed] mb-1">
                     Role / Context
                   </label>
                   <input
@@ -362,14 +496,14 @@ export default function ReviewsSection() {
                     value={role}
                     onChange={(e) => setRole(e.target.value)}
                     placeholder="e.g. Colleague, Recruiter"
-                    className="w-full px-3 py-2 border-2 border-[#1c1b18] bg-white text-sm focus:outline-none focus:border-[#d4701a]"
+                    className="w-full px-3 py-2 border-2 border-[#1c1b18] dark:border-[#38352e] bg-white dark:bg-[#25231e] text-sm focus:outline-none focus:border-[#d4701a]"
                   />
                 </div>
               </div>
 
               {/* Rating Selector */}
               <div>
-                <label className="block text-[11px] uppercase tracking-wider font-bold text-[#1c1b18] mb-1">
+                <label className="block text-[11px] uppercase tracking-wider font-bold text-[#1c1b18] dark:text-[#f3f2ed] mb-1">
                   Rating: {rating} / 5 Stars
                 </label>
                 <div className="flex items-center gap-1.5 py-1">
@@ -387,7 +521,7 @@ export default function ReviewsSection() {
                         className={`w-5 h-5 ${
                           star <= rating
                             ? "text-[#f0a04b] fill-current"
-                            : "text-gray-300"
+                            : "text-gray-300 dark:text-gray-600"
                         }`}
                       />
                     </button>
@@ -397,7 +531,7 @@ export default function ReviewsSection() {
 
               {/* Color Theme Selector */}
               <div>
-                <label className="block text-[11px] uppercase tracking-wider font-bold text-[#1c1b18] mb-1.5">
+                <label className="block text-[11px] uppercase tracking-wider font-bold text-[#1c1b18] dark:text-[#f3f2ed] mb-1.5">
                   Card Theme:
                 </label>
                 <div className="grid grid-cols-2 xs:grid-cols-3 sm:flex sm:flex-wrap gap-1.5 sm:gap-2">
@@ -411,8 +545,8 @@ export default function ReviewsSection() {
                       }}
                       className={`px-2.5 py-1 text-xs border rounded flex items-center gap-1.5 transition-all ${
                         selectedTheme === thm.id
-                          ? "border-[#1c1b18] font-bold ring-2 ring-[#d4701a] bg-white"
-                          : "border-[#cfcabb] bg-[#fbfaf6] text-[#66625a]"
+                          ? "border-[#1c1b18] font-bold ring-2 ring-[#d4701a] bg-white dark:bg-[#25231e]"
+                          : "border-[#cfcabb] dark:border-[#38352e] bg-[#fbfaf6] dark:bg-[#191815] text-[#66625a] dark:text-[#a09c91]"
                       }`}
                     >
                       <span
@@ -427,7 +561,7 @@ export default function ReviewsSection() {
               {/* Message */}
               <div>
                 <div className="flex justify-between items-center mb-1">
-                  <label className="text-[11px] uppercase tracking-wider font-bold text-[#1c1b18]">
+                  <label className="text-[11px] uppercase tracking-wider font-bold text-[#1c1b18] dark:text-[#f3f2ed]">
                     Review Message *
                   </label>
                   <span className="text-[11px] text-[#a39d8e]">
@@ -441,7 +575,7 @@ export default function ReviewsSection() {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Write your honest review, experience, or recommendation..."
-                  className="w-full p-3 border-2 border-[#1c1b18] bg-white text-sm focus:outline-none focus:border-[#d4701a]"
+                  className="w-full p-3 border-2 border-[#1c1b18] dark:border-[#38352e] bg-white dark:bg-[#25231e] text-sm focus:outline-none focus:border-[#d4701a]"
                 />
               </div>
 
@@ -450,16 +584,21 @@ export default function ReviewsSection() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 border-2 border-[#cfcabb] hover:border-[#1c1b18] text-[#66625a] hover:text-[#1c1b18] text-xs uppercase font-bold"
+                  className="px-4 py-2 border-2 border-[#cfcabb] dark:border-[#38352e] hover:border-[#1c1b18] dark:hover:border-white text-[#66625a] dark:text-[#a09c91] hover:text-[#1c1b18] dark:hover:text-white text-xs uppercase font-bold"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-[#1c1b18] text-[#f3f2ed] border-2 border-[#1c1b18] hover:bg-[#d4701a] hover:border-[#d4701a] text-xs uppercase font-bold tracking-wider shadow-sm flex items-center gap-2"
+                  disabled={isSubmitting}
+                  className="px-6 py-2 bg-[#1c1b18] dark:bg-[#f3f2ed] text-[#f3f2ed] dark:text-[#1c1b18] border-2 border-[#1c1b18] dark:border-[#f3f2ed] hover:bg-[#d4701a] dark:hover:bg-[#d4701a] dark:hover:text-white hover:border-[#d4701a] text-xs uppercase font-bold tracking-wider shadow-sm flex items-center gap-2 disabled:opacity-50"
                 >
-                  <Send className="w-3.5 h-3.5 text-[#f0a04b]" />
-                  <span>Post Review</span>
+                  {isSubmitting ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin text-[#f0a04b]" />
+                  ) : (
+                    <Send className="w-3.5 h-3.5 text-[#f0a04b]" />
+                  )}
+                  <span>{isSubmitting ? "Posting..." : "Post Review"}</span>
                 </button>
               </div>
             </form>
