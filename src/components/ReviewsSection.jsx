@@ -72,7 +72,14 @@ const COLOR_THEMES = [
   }
 ];
 
-const ADMIN_PASSCODES = ["200503"];
+const ADMIN_HASH = "1df96c3452a71a61387a7b8e77dea2475f8fecae087715c34ae5afab8ae46329";
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
 
 // Helper for client token & authored review IDs
 const getClientToken = () => {
@@ -223,9 +230,13 @@ export default function ReviewsSection() {
     }
   };
 
-  const handleAdminLogin = (e) => {
+  const handleAdminLogin = async (e) => {
     e.preventDefault();
-    if (ADMIN_PASSCODES.includes(adminPassInput.trim())) {
+    const entered = adminPassInput.trim();
+    const envPass = import.meta.env.VITE_ADMIN_PASSCODE;
+    const enteredHash = await sha256(entered);
+
+    if ((envPass && entered === envPass) || enteredHash === ADMIN_HASH) {
       sound.playSuccess();
       setIsAdmin(true);
       try {
