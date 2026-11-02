@@ -72,7 +72,7 @@ const COLOR_THEMES = [
   }
 ];
 
-const ADMIN_PASSCODES = ["0412", "0412-SS", "0412-ss", "sohail0412"];
+const ADMIN_PASSCODES = ["200503"];
 
 // Helper for client token & authored review IDs
 const getClientToken = () => {
@@ -239,7 +239,7 @@ export default function ReviewsSection() {
       showToast("✓ Admin mode enabled: You can manage all reviews.");
     } else {
       sound.playClick();
-      setAdminPassError("Incorrect passcode. Please try again.");
+      setAdminPassError("Incorrect passcode. Access denied.");
     }
   };
 
@@ -260,17 +260,25 @@ export default function ReviewsSection() {
     setDeleteTarget(null);
 
     sound.playClick();
-    setReviews((prev) => prev.filter((r) => r.id !== target.id));
-    unregisterAuthoredReview(target.id);
 
-    if (db && target.id) {
+    if (db && target.id && target.isCloud) {
       try {
         const reviewRef = doc(db, "reviews", target.id);
         await deleteDoc(reviewRef);
+        setReviews((prev) => prev.filter((r) => r.id !== target.id));
+        unregisterAuthoredReview(target.id);
+        showToast("✓ Review deleted permanently.");
+        return;
       } catch (err) {
-        console.warn("Firestore delete error:", err);
+        console.error("Firestore delete error:", err);
+        showToast("⚠ Could not delete. Please check Firestore rules in Firebase.");
+        return;
       }
     }
+
+    // Local / static review removal
+    setReviews((prev) => prev.filter((r) => r.id !== target.id));
+    unregisterAuthoredReview(target.id);
     showToast("✓ Review deleted.");
   };
 
@@ -416,7 +424,7 @@ export default function ReviewsSection() {
               title="Click to sign out of Admin mode"
             >
               <ShieldCheck className="w-3.5 h-3.5" />
-              <span>[ADMIN MODE ACTIVE]</span>
+              <span>[ADMIN ACTIVE]</span>
             </button>
           ) : (
             <button
@@ -424,10 +432,10 @@ export default function ReviewsSection() {
                 sound.playClick();
                 setAdminModalOpen(true);
               }}
-              className="text-[#a39d8e] hover:text-[#d4701a] transition-colors"
-              title="Portfolio Owner / Admin Access"
+              className="text-[#a39d8e]/60 hover:text-[#d4701a] transition-colors text-[10px]"
+              title="Administrator access"
             >
-              [OWNER ACCESS]
+              [ADMIN]
             </button>
           )}
         </div>
@@ -587,7 +595,7 @@ export default function ReviewsSection() {
               <div className="flex items-center gap-2 text-[#d4701a]">
                 <KeyRound className="w-5 h-5" />
                 <h3 className="m-0 font-display font-black text-xl uppercase tracking-wide text-[#1c1b18] dark:text-white">
-                  Owner Admin Access
+                  Admin Verification
                 </h3>
               </div>
               <button
@@ -602,7 +610,7 @@ export default function ReviewsSection() {
             </div>
 
             <p className="text-xs font-mono text-[#66625a] dark:text-[#a09c91]">
-              Enter your portfolio admin passcode (e.g. <span className="font-bold text-[#1c1b18] dark:text-white">0412</span>) to manage or delete any reviews on the board.
+              Enter passcode to unlock review management.
             </p>
 
             <form onSubmit={handleAdminLogin} className="flex flex-col gap-3">
@@ -633,7 +641,7 @@ export default function ReviewsSection() {
                   type="submit"
                   className="px-5 py-2 bg-[#1c1b18] dark:bg-[#f3f2ed] text-[#f3f2ed] dark:text-[#1c1b18] hover:bg-[#d4701a] dark:hover:bg-[#d4701a] dark:hover:text-white text-xs uppercase font-bold tracking-wider"
                 >
-                  Unlock Admin
+                  Verify
                 </button>
               </div>
             </form>
