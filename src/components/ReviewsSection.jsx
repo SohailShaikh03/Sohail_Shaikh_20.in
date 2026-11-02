@@ -10,20 +10,20 @@ import {
   orderBy,
   serverTimestamp,
   doc,
-  updateDoc,
-  deleteDoc,
-  increment
+  deleteDoc
 } from "firebase/firestore";
 import {
   Plus,
   Star,
-  Heart,
   MessageSquare,
   CheckCircle2,
   X,
   Send,
   Trash2,
-  Loader2
+  Loader2,
+  ShieldCheck,
+  ShieldAlert,
+  KeyRound
 } from "lucide-react";
 
 // Clean, pleasant post-it note palettes
@@ -72,6 +72,35 @@ const COLOR_THEMES = [
   }
 ];
 
+const ADMIN_PASSCODES = ["0412", "0412-SS", "0412-ss", "sohail0412"];
+
+// Helper for client token & authored review IDs
+const getClientToken = () => {
+  try {
+    let token = localStorage.getItem("sohail_client_token");
+    if (!token) {
+      token = "client-" + Math.random().toString(36).substring(2, 12) + "-" + Date.now();
+      localStorage.setItem("sohail_client_token", token);
+    }
+    return token;
+  } catch {
+    return "guest-client";
+  }
+};
+
+const getMyAuthoredIds = () => {
+  try {
+    const raw = localStorage.getItem("sohail_my_authored_review_ids");
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) return parsed;
+    }
+  } catch {
+    // Ignore
+  }
+  return [];
+};
+
 export default function ReviewsSection() {
   const [reviews, setReviews] = useState(() => {
     const verified = portfolioData.communityReviews || [];
@@ -95,6 +124,23 @@ export default function ReviewsSection() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+
+  // Author and Admin Permissions
+  const [clientToken] = useState(() => getClientToken());
+  const [authoredIds, setAuthoredIds] = useState(() => getMyAuthoredIds());
+  const [isAdmin, setIsAdmin] = useState(() => {
+    try {
+      return localStorage.getItem("sohail_is_admin") === "true";
+    } catch {
+      return false;
+    }
+  });
+
+  // Modals for Delete & Admin Passcode
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [adminModalOpen, setAdminModalOpen] = useState(false);
+  const [adminPassInput, setAdminPassInput] = useState("");
+  const [adminPassError, setAdminPassError] = useState("");
 
   // Form State
   const [author, setAuthor] = useState("");
@@ -125,7 +171,7 @@ export default function ReviewsSection() {
               message: data.message || "",
               rating: typeof data.rating === "number" ? data.rating : 5,
               theme: data.theme || "amber",
-              likes: typeof data.likes === "number" ? data.likes : 1,
+              clientToken: data.clientToken || "",
               date: data.date || "Recently",
               isCloud: true
             };
@@ -152,53 +198,80 @@ export default function ReviewsSection() {
     }
   }, []);
 
-  // Sync fallback reviews to localStorage
-  useEffect(() => {
-    if (!isFirebaseConfigured) {
-      try {
-        localStorage.setItem("sohail_portfolio_user_reviews", JSON.stringify(reviews));
-      } catch {
-        // Ignore
-      }
-    }
-  }, [reviews]);
-
   const showToast = (msg) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(""), 3500);
   };
 
-  const handleLike = async (id) => {
-    sound.playTick();
-    setReviews((prev) =>
-      prev.map((r) => (r.id === id ? { ...r, likes: (r.likes || 0) + 1 } : r))
-    );
-
-    if (db) {
-      try {
-        const reviewRef = doc(db, "reviews", id);
-        await updateDoc(reviewRef, {
-          likes: increment(1)
-        });
-      } catch (err) {
-        console.warn("Firestore like update error:", err);
-      }
+  const registerAuthoredReview = (id) => {
+    try {
+      const updated = [...authoredIds, id];
+      setAuthoredIds(updated);
+      localStorage.setItem("sohail_my_authored_review_ids", JSON.stringify(updated));
+    } catch {
+      // Ignore
     }
   };
 
-  const handleDelete = async (id) => {
-    sound.playClick();
-    setReviews((prev) => prev.filter((r) => r.id !== id));
+  const unregisterAuthoredReview = (id) => {
+    try {
+      const updated = authoredIds.filter((x) => x !== id);
+      setAuthoredIds(updated);
+      localStorage.setItem("sohail_my_authored_review_ids", JSON.stringify(updated));
+    } catch {
+      // Ignore
+    }
+  };
 
-    if (db) {
+  const handleAdminLogin = (e) => {
+    e.preventDefault();
+    if (ADMIN_PASSCODES.includes(adminPassInput.trim())) {
+      sound.playSuccess();
+      setIsAdmin(true);
       try {
-        const reviewRef = doc(db, "reviews", id);
+        localStorage.setItem("sohail_is_admin", "true");
+      } catch {
+        // Ignore
+      }
+      setAdminModalOpen(false);
+      setAdminPassInput("");
+      setAdminPassError("");
+      showToast("✓ Admin mode enabled: You can manage all reviews.");
+    } else {
+      sound.playClick();
+      setAdminPassError("Incorrect passcode. Please try again.");
+    }
+  };
+
+  const handleAdminLogout = () => {
+    sound.playClick();
+    setIsAdmin(false);
+    try {
+      localStorage.removeItem("sohail_is_admin");
+    } catch {
+      // Ignore
+    }
+    showToast("Admin mode signed out.");
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    const target = deleteTarget;
+    setDeleteTarget(null);
+
+    sound.playClick();
+    setReviews((prev) => prev.filter((r) => r.id !== target.id));
+    unregisterAuthoredReview(target.id);
+
+    if (db && target.id) {
+      try {
+        const reviewRef = doc(db, "reviews", target.id);
         await deleteDoc(reviewRef);
       } catch (err) {
         console.warn("Firestore delete error:", err);
       }
     }
-    showToast("Review deleted.");
+    showToast("✓ Review deleted.");
   };
 
   const handleSubmit = async (e) => {
@@ -221,7 +294,7 @@ export default function ReviewsSection() {
       message: message.trim(),
       rating: rating,
       theme: selectedTheme,
-      likes: 1,
+      clientToken: clientToken,
       date: new Date().toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
@@ -231,10 +304,12 @@ export default function ReviewsSection() {
 
     if (db) {
       try {
-        await addDoc(collection(db, "reviews"), {
+        const docRef = await addDoc(collection(db, "reviews"), {
           ...newReview,
           createdAt: serverTimestamp()
         });
+
+        registerAuthoredReview(docRef.id);
         sound.playSuccess();
         setIsModalOpen(false);
         setAuthor("");
@@ -242,20 +317,21 @@ export default function ReviewsSection() {
         setMessage("");
         setRating(5);
         setIsSubmitting(false);
-        showToast("✓ Thank you! Your review has been saved to Firebase.");
+        showToast("✓ Thank you! Your review has been saved.");
         return;
       } catch (err) {
         console.error("Firestore submission error:", err);
-        // Fall back to local storage addition below
       }
     }
 
     // Local / fallback mode
     sound.playSuccess();
+    const localId = "rev-" + Date.now();
     const localReview = {
-      id: "rev-" + Date.now(),
+      id: localId,
       ...newReview
     };
+    registerAuthoredReview(localId);
     setReviews((prev) => [localReview, ...prev]);
     setIsModalOpen(false);
     setAuthor("");
@@ -263,7 +339,7 @@ export default function ReviewsSection() {
     setMessage("");
     setRating(5);
     setIsSubmitting(false);
-    showToast("✓ Thank you! Your review has been added to the board.");
+    showToast("✓ Thank you! Your review has been added.");
   };
 
   return (
@@ -323,14 +399,36 @@ export default function ReviewsSection() {
             </span>
           )}
         </div>
-        <div className="flex items-center gap-2 text-[11px] text-[#a39d8e] dark:text-[#736e63]">
-          {isFirebaseConfigured ? (
+
+        {/* Status & Admin Control */}
+        <div className="flex items-center gap-3 text-[11px]">
+          {isFirebaseConfigured && (
             <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               [LIVE FIREBASE SYNC]
             </span>
+          )}
+
+          {isAdmin ? (
+            <button
+              onClick={handleAdminLogout}
+              className="text-amber-600 dark:text-amber-400 hover:underline flex items-center gap-1 font-bold"
+              title="Click to sign out of Admin mode"
+            >
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>[ADMIN MODE ACTIVE]</span>
+            </button>
           ) : (
-            <span>[VISITOR FEEDBACK BOARD]</span>
+            <button
+              onClick={() => {
+                sound.playClick();
+                setAdminModalOpen(true);
+              }}
+              className="text-[#a39d8e] hover:text-[#d4701a] transition-colors"
+              title="Portfolio Owner / Admin Access"
+            >
+              [OWNER ACCESS]
+            </button>
           )}
         </div>
       </div>
@@ -376,6 +474,13 @@ export default function ReviewsSection() {
           {reviews.map((rev) => {
             const theme =
               COLOR_THEMES.find((t) => t.id === rev.theme) || COLOR_THEMES[0];
+
+            // Only author or admin can delete
+            const isAuthor =
+              authoredIds.includes(rev.id) ||
+              (rev.clientToken && rev.clientToken === clientToken);
+            const canDelete = isAuthor || isAdmin;
+
             return (
               <div
                 key={rev.id}
@@ -398,12 +503,12 @@ export default function ReviewsSection() {
                   </div>
 
                   {/* Review Text */}
-                  <p className="my-4 text-[15px] leading-relaxed font-sans font-medium">
+                  <p className="my-4 text-[15px] leading-relaxed font-sans font-medium whitespace-pre-wrap">
                     "{rev.message}"
                   </p>
                 </div>
 
-                {/* Card Bottom: Author & Reactions */}
+                {/* Card Bottom: Author & Delete (Only if author or admin) */}
                 <div className="pt-3 border-t border-current/15 flex items-center justify-between gap-3 text-xs">
                   <div className="min-w-0">
                     <div className="font-bold truncate text-[13.5px]">
@@ -414,23 +519,19 @@ export default function ReviewsSection() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 flex-none">
+                  {/* Delete Button (Allowed for review author or owner/admin) */}
+                  {canDelete && (
                     <button
-                      onClick={() => handleLike(rev.id)}
-                      className="inline-flex items-center gap-1 px-2 py-1 rounded bg-black/5 hover:bg-black/10 transition-colors"
-                      title="Like this review"
-                    >
-                      <Heart className="w-3.5 h-3.5 fill-current text-rose-500" />
-                      <span className="font-bold text-[11px]">{rev.likes || 1}</span>
-                    </button>
-                    <button
-                      onClick={() => handleDelete(rev.id)}
-                      className="p-1 text-current/40 hover:text-red-600 transition-colors"
-                      title="Delete review"
+                      onClick={() => {
+                        sound.playClick();
+                        setDeleteTarget(rev);
+                      }}
+                      className="p-1.5 rounded hover:bg-black/10 text-current/50 hover:text-red-600 transition-colors flex items-center gap-1"
+                      title={isAdmin ? "Delete review (Admin)" : "Delete your review"}
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
-                  </div>
+                  )}
                 </div>
               </div>
             );
@@ -438,7 +539,109 @@ export default function ReviewsSection() {
         </div>
       )}
 
-      {/* ================= SIMPLE WRITE A REVIEW MODAL ================= */}
+      {/* ================= DELETE CONFIRMATION DIALOG ================= */}
+      {deleteTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fadeIn">
+          <div className="relative w-full max-w-md bg-[#fbfaf6] dark:bg-[#1a1916] text-[#1c1b18] dark:text-[#f3f2ed] border-2 border-[#1c1b18] dark:border-[#38352e] shadow-2xl p-6 flex flex-col gap-4 rounded-sm">
+            <div className="flex items-center gap-3 text-red-600 dark:text-red-400">
+              <ShieldAlert className="w-6 h-6 flex-none" />
+              <h3 className="m-0 font-display font-black text-xl uppercase tracking-wide">
+                Delete Review?
+              </h3>
+            </div>
+
+            <p className="text-sm font-mono text-[#66625a] dark:text-[#a09c91] leading-relaxed">
+              Are you sure you want to permanently delete the review by{" "}
+              <strong className="text-[#1c1b18] dark:text-white">
+                "{deleteTarget.author}"
+              </strong>
+              ? This action cannot be undone.
+            </p>
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setDeleteTarget(null)}
+                className="px-4 py-2 border-2 border-[#cfcabb] dark:border-[#38352e] hover:border-[#1c1b18] text-xs uppercase font-bold"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={confirmDelete}
+                className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider shadow-sm flex items-center gap-2"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Delete Review</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ================= OWNER / ADMIN PASSCODE MODAL ================= */}
+      {adminModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fadeIn">
+          <div className="relative w-full max-w-md bg-[#fbfaf6] dark:bg-[#1a1916] text-[#1c1b18] dark:text-[#f3f2ed] border-2 border-[#1c1b18] dark:border-[#38352e] shadow-2xl p-6 flex flex-col gap-4 rounded-sm">
+            <div className="flex items-center justify-between border-b border-[#1c1b18]/20 pb-3">
+              <div className="flex items-center gap-2 text-[#d4701a]">
+                <KeyRound className="w-5 h-5" />
+                <h3 className="m-0 font-display font-black text-xl uppercase tracking-wide text-[#1c1b18] dark:text-white">
+                  Owner Admin Access
+                </h3>
+              </div>
+              <button
+                onClick={() => {
+                  setAdminModalOpen(false);
+                  setAdminPassError("");
+                }}
+                className="p-1 text-current/60 hover:text-current"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <p className="text-xs font-mono text-[#66625a] dark:text-[#a09c91]">
+              Enter your portfolio admin passcode (e.g. <span className="font-bold text-[#1c1b18] dark:text-white">0412</span>) to manage or delete any reviews on the board.
+            </p>
+
+            <form onSubmit={handleAdminLogin} className="flex flex-col gap-3">
+              {adminPassError && (
+                <div className="bg-red-50 border border-red-500 text-red-700 px-3 py-1.5 text-xs font-semibold">
+                  {adminPassError}
+                </div>
+              )}
+              <input
+                type="password"
+                required
+                autoFocus
+                value={adminPassInput}
+                onChange={(e) => setAdminPassInput(e.target.value)}
+                placeholder="Enter Passcode..."
+                className="w-full px-3 py-2 border-2 border-[#1c1b18] dark:border-[#38352e] bg-white dark:bg-[#25231e] text-sm focus:outline-none focus:border-[#d4701a]"
+              />
+
+              <div className="flex items-center justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setAdminModalOpen(false)}
+                  className="px-4 py-2 border border-[#cfcabb] dark:border-[#38352e] text-xs uppercase font-bold"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 bg-[#1c1b18] dark:bg-[#f3f2ed] text-[#f3f2ed] dark:text-[#1c1b18] hover:bg-[#d4701a] dark:hover:bg-[#d4701a] dark:hover:text-white text-xs uppercase font-bold tracking-wider"
+                >
+                  Unlock Admin
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ================= WRITE A REVIEW MODAL ================= */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-sm animate-fadeIn">
           <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-[#fbfaf6] dark:bg-[#1a1916] text-[#1c1b18] dark:text-[#f3f2ed] border-2 border-[#1c1b18] dark:border-[#38352e] shadow-2xl p-5 sm:p-8 flex flex-col gap-4 sm:gap-5 rounded-sm">
